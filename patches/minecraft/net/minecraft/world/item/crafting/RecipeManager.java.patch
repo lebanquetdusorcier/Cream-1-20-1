@@ -1,13 +1,5 @@
 --- a/net/minecraft/world/item/crafting/RecipeManager.java
 +++ b/net/minecraft/world/item/crafting/RecipeManager.java
-@@ -11,7 +_,6 @@
- import com.mojang.datafixers.util.Pair;
- import com.mojang.logging.LogUtils;
- import java.util.Collection;
--import java.util.Collections;
- import java.util.Comparator;
- import java.util.List;
- import java.util.Map;
 @@ -37,9 +_,17 @@
     public Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> recipes = ImmutableMap.of();
     private Map<ResourceLocation, Recipe<?>> byName = ImmutableMap.of();
