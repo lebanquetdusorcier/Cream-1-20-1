@@ -129,7 +129,7 @@ publishing {
                 username = System.getenv("KETTINGUSERNAME")
                 password = System.getenv("KETTINGPASSWORD")
             }
-            url = "https://repo.kettingpowered.org/Ketting/"
+            url = "https://repo.kettingpowered.org/Ketting-Server-Releases/"
         }
     }
 }
