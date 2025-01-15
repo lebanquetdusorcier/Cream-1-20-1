@@ -14,6 +14,8 @@ public class EntityDeathEvent extends EntityEvent {
     private final List<ItemStack> drops;
     private int dropExp = 0;
 
+    public boolean dropsAccessed; //Ketting
+
     public EntityDeathEvent(@NotNull final LivingEntity entity, @NotNull final List<ItemStack> drops) {
         this(entity, drops, 0);
     }
@@ -61,6 +63,7 @@ public class EntityDeathEvent extends EntityEvent {
      */
     @NotNull
     public List<ItemStack> getDrops() {
+        dropsAccessed = true; //Ketting
         return drops;
     }
 

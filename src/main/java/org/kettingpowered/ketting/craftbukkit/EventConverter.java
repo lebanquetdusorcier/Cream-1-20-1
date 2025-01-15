@@ -42,7 +42,7 @@ public class EventConverter {
         Bukkit.getPluginManager().callEvent(bukkitEvent);
         entity.expToDrop = bukkitEvent.getDroppedExp();
 
-        if (drops.isEmpty())
+        if (bukkitEvent.dropsAccessed && drops.isEmpty())
             event.setCanceled(true);
 
         return event;
