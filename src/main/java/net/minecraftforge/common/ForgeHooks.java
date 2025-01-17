@@ -849,6 +849,11 @@ public class ForgeHooks
             }
             catch (Exception exception)
             {
+                //Ketting start
+                if (org.kettingpowered.ketting.config.KettingConfig.getInstance().SILENCE_PARSING_ERRORS.getValue())
+                    LOGGER.error("Couldn't parse element {}:{}", directory, location);
+                else
+                //Ketting end
                 LOGGER.error("Couldn't parse element {}:{}", directory, location, exception);
                 return Optional.empty();
             }
