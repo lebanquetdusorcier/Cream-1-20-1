@@ -187,7 +187,7 @@ public class ForgeInject {
                     debug("Assigning block data " + blockDataClass + " to " + material.name() + " because it extends " + block.getClass());
                 }
             } catch (Throwable e) {
-                Ketting.LOGGER.error("Could not inject block into Bukkit: " + enumName + ". " + e.getMessage());
+                Ketting.LOGGER.error("Could not inject block into Bukkit: {}.", enumName, e);
             }
         }
         debug("Injecting Forge Blocks into Bukkit: DONE");
