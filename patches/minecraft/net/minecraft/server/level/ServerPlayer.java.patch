@@ -384,7 +384,7 @@
 +            java.util.concurrent.atomic.AtomicBoolean tpCancelled = new java.util.concurrent.atomic.AtomicBoolean(false); //Ketting
 +            Entity e = teleporter.placeEntity(this, serverlevel, newLevel.get(), this.getYRot(), spawnPortal -> {//Forge: Start vanilla logic
 +               serverlevel.getProfiler().push("moving");
-+               newLevel.set(portalinfo.world); // CraftBukkit
++               if (teleporter.isVanilla()) newLevel.set(portalinfo.world); // CraftBukkit //Ketting - vanilla check
 +               if (newLevel.get() == null) { } else // CraftBukkit - empty to fall through to null to event
 +               if (resourcekey == net.minecraft.world.level.dimension.LevelStem.OVERWORLD && newLevel.get().getTypeKey() == net.minecraft.world.level.dimension.LevelStem.NETHER) {
 +                  this.enteredNetherPosition = this.position();
