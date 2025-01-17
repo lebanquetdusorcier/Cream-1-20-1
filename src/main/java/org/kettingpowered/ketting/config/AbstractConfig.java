@@ -41,17 +41,23 @@ public abstract class AbstractConfig {
         config.options().copyDefaults(true);
 
         if (config.getInt("config-version", 0) != configVersion) {
-            config = new YamlConfiguration();
-            config.options().copyDefaults(true);
-            collectConfigValues().forEach(v -> config.addDefault(v.getPath(), v.getValue()));
+            YamlConfiguration defaultConfig = new YamlConfiguration();
+            defaultConfig.options().copyDefaults(true);
+            collectConfigValues().forEach(v -> defaultConfig.addDefault(v.getPath(), v.getValue()));
+
+            for (String key : defaultConfig.getKeys(true)) {
+                if (!config.contains(key) || config.get(key) == null)
+                    config.set(key, defaultConfig.get(key));
+            }
+
             config.set("config-version", configVersion);
             save();
-            return;
         }
 
         collectConfigValues().forEach(v -> v.setValue(config.getString(v.getPath())));
         save();
     }
+
 
     public void save() {
         try {
