@@ -152,7 +152,7 @@
                 });
                 if (j > 10) {
                    mutablecomponent1.append(CommonComponents.ELLIPSIS);
-@@ -291,20 +_,70 @@
+@@ -291,20 +_,67 @@
  
           return 0;
        } finally {
@@ -185,7 +185,6 @@
        RootCommandNode<SharedSuggestionProvider> rootcommandnode = new RootCommandNode<>();
        map.put(this.dispatcher.getRoot(), rootcommandnode);
 -      this.fillUsableCommands(this.dispatcher.getRoot(), rootcommandnode, p_82096_.createCommandSourceStack(), map);
--      p_82096_.connection.send(new ClientboundCommandsPacket(rootcommandnode));
 +
 +      net.minecraftforge.server.command.CommandHelper.mergeCommandNode(this.dispatcher.getRoot(), rootcommandnode, map, p_82096_.createCommandSourceStack(), ctx -> 0, suggest -> SuggestionProviders.safelySwap((com.mojang.brigadier.suggestion.SuggestionProvider<SharedSuggestionProvider>) (com.mojang.brigadier.suggestion.SuggestionProvider<?>) suggest));
 +
@@ -212,10 +211,7 @@
 +
 +      //Add all the forge commands to the root node
 +      forgeRoot.getChildren().forEach(rootcommandnode::addChild);
-+
-+      ClientboundCommandsPacket packet = new ClientboundCommandsPacket(rootcommandnode);
-+      //Ketting TODO - ambassador support
-+      p_82096_.connection.send(packet);
+       p_82096_.connection.send(new ClientboundCommandsPacket(rootcommandnode));
     }
 +   //Ketting end
  
