@@ -126,7 +126,7 @@
        LOGGER.info("Default game type: {}", (Object)dedicatedserverproperties.gamemode);
        InetAddress inetaddress = null;
        if (!this.getLocalIp().isEmpty()) {
-@@ -138,9 +_,23 @@
+@@ -138,9 +_,28 @@
           return false;
        }
  
@@ -136,13 +136,18 @@
 +      server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
 +      // CraftBukkit end
 +
++      // Ketting start - Paper - Add Velocity IP Forwarding Support
++      boolean velocityEnabled = org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue();
++      String proxyFlavor = velocityEnabled ? "Velocity" : "BungeeCord";
++      String proxyLink = velocityEnabled ? "https://docs.papermc.io/velocity/security" : "http://www.spigotmc.org/wiki/firewall-guide/";
        if (!this.usesAuthentication()) {
           LOGGER.warn("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
           LOGGER.warn("The server will make no attempt to authenticate usernames. Beware.");
 +         // Spigot start
-+         if (org.spigotmc.SpigotConfig.bungee) {
-+            DedicatedServer.LOGGER.warn("Whilst this makes it possible to use BungeeCord, unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
-+            DedicatedServer.LOGGER.warn("Please see http://www.spigotmc.org/wiki/firewall-guide/ for further information.");
++         if (org.spigotmc.SpigotConfig.bungee || velocityEnabled) {
++            DedicatedServer.LOGGER.warn("Whilst this makes it possible to use " + proxyFlavor + ", unless access to your server is properly restricted, it also opens up the ability for hackers to connect with any username they choose.");
++            DedicatedServer.LOGGER.warn("Please see " + proxyLink + " for further information.");
++            //Ketting end
 +         } else {
 +            DedicatedServer.LOGGER.warn("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
 +         }

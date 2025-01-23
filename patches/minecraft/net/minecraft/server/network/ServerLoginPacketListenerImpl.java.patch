@@ -1,10 +1,11 @@
 --- a/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -52,6 +_,7 @@
+@@ -52,6 +_,8 @@
     private final String serverId = "";
     @Nullable
     private ServerPlayer delayedAcceptPlayer;
 +   private net.minecraft.server.level.ServerPlayer player; // CraftBukkit
++   private int velocityLoginMessageId = -1; //Ketting - Paper - Add Velocity IP Forwarding Support
  
     public ServerLoginPacketListenerImpl(MinecraftServer p_10027_, Connection p_10028_) {
        this.server = p_10027_;
@@ -104,7 +105,7 @@
     }
  
     public void handleHello(ServerboundHelloPacket p_10047_) {
-@@ -147,14 +_,29 @@
+@@ -147,14 +_,39 @@
        GameProfile gameprofile = this.server.getSingleplayerProfile();
        if (gameprofile != null && p_10047_.name().equalsIgnoreCase(gameprofile.getName())) {
           this.gameProfile = gameprofile;
@@ -117,6 +118,16 @@
              this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
           } else {
 -            this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
++            //Ketting start - Paper - Add Velocity IP Forwarding Support
++            if (org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) {
++               this.velocityLoginMessageId = java.util.concurrent.ThreadLocalRandom.current().nextInt();
++               net.minecraft.network.FriendlyByteBuf buf = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
++               buf.writeByte(org.kettingpowered.ketting.velocity.ProxySupport.MAX_SUPPORTED_FORWARDING_VERSION);
++               net.minecraft.network.protocol.login.ClientboundCustomQueryPacket packet1 = new net.minecraft.network.protocol.login.ClientboundCustomQueryPacket(this.velocityLoginMessageId, org.kettingpowered.ketting.velocity.ProxySupport.PLAYER_INFO_CHANNEL, buf);
++               this.connection.send(packet1);
++               return;
++            }
++            //Ketting end
 +            //this.state = ServerLoginPacketListenerImpl.State.NEGOTIATING; // FORGE: continue NEGOTIATING, we move to READY_TO_ACCEPT after Forge is ready
 +            // Spigot start
 +            new Thread("User Authenticator #" + ServerLoginPacketListenerImpl.UNIQUE_THREAD_ID.incrementAndGet()) {
@@ -184,7 +195,7 @@
              }
  
           }
-@@ -226,7 +_,50 @@
+@@ -226,14 +_,140 @@
        thread.start();
     }
  
@@ -192,6 +203,12 @@
 +   public class LoginHandler {
 +
 +      public void fireEvents() throws Exception {
++         //Ketting start - Paper - Add Velocity IP Forwarding Support
++         if (ServerLoginPacketListenerImpl.this.velocityLoginMessageId == -1 && org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) {
++            disconnect("This server requires you to connect with Velocity.");
++            return;
++         }
++         //Ketting end
 +         String playerName = gameProfile.getName();
 +         java.net.InetAddress address = ((java.net.InetSocketAddress) connection.getRemoteAddress()).getAddress();
 +         java.util.UUID uniqueId = gameProfile.getId();
@@ -231,11 +248,55 @@
 +   // Spigot end
 +
     public void handleCustomQueryPacket(ServerboundCustomQueryPacket p_10045_) {
++      if (handleProxyResponse(p_10045_)) return; //Ketting - velocity support
 +      if (!net.minecraftforge.network.NetworkHooks.onCustomPayload(p_10045_, this.connection))
        this.disconnect(Component.translatable("multiplayer.disconnect.unexpected_query_response"));
     }
  
-@@ -234,6 +_,39 @@
++   //Ketting start - Paper - Add Velocity IP Forwarding Support
++   private boolean handleProxyResponse(ServerboundCustomQueryPacket packet) {
++      if (!org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) return false;
++      if (packet.getIndex() != this.velocityLoginMessageId) return false;
++
++      net.minecraft.network.FriendlyByteBuf payload = packet.getInternalData();
++
++      if (payload == null) {
++         disconnect("This server requires you to connect with Velocity.");
++         return true;
++      }
++
++      if (!org.kettingpowered.ketting.velocity.ProxySupport.checkIntegrity(payload)) {
++         disconnect("This server requires you to connect with Velocity.");
++         return true;
++      }
++
++      int version = payload.readVarInt();
++      if (version > org.kettingpowered.ketting.velocity.ProxySupport.MAX_SUPPORTED_FORWARDING_VERSION) {
++         throw new IllegalStateException("Unsupported forwarding version " + version + ", wanted upto " + org.kettingpowered.ketting.velocity.ProxySupport.MAX_SUPPORTED_FORWARDING_VERSION);
++      }
++
++      java.net.SocketAddress listening = this.connection.getRemoteAddress();
++      int port = 0;
++      if (listening instanceof java.net.InetSocketAddress) {
++         port = ((java.net.InetSocketAddress) listening).getPort();
++      }
++      this.connection.address = new java.net.InetSocketAddress(org.kettingpowered.ketting.velocity.ProxySupport.readAddress(payload), port);
++
++      this.gameProfile = org.kettingpowered.ketting.velocity.ProxySupport.createProfile(payload);
++
++      // Proceed with login
++      org.kettingpowered.ketting.core.Ketting.LOGGER.warn("Velocity forwarded player {} with UUID {}, allowing login", this.gameProfile.getName(), this.gameProfile.getId());
++      try {
++         new LoginHandler().fireEvents();
++      } catch (Exception ex) {
++         disconnect("Failed to verify username!");
++         server.server.getLogger().log(java.util.logging.Level.WARNING, "Exception verifying " + gameProfile.getName(), ex);
++      }
++      return true;
++   }
++   //Ketting end
++
+    protected GameProfile createFakeProfile(GameProfile p_10039_) {
        UUID uuid = UUIDUtil.createOfflinePlayerUUID(p_10039_.getName());
        return new GameProfile(uuid, p_10039_.getName());
     }

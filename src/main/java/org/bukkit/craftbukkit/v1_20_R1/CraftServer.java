@@ -798,7 +798,7 @@ public final class CraftServer implements Server {
     @Override
     public long getConnectionThrottle() {
         // Spigot Start - Automatically set connection throttle for bungee configurations
-        if (org.spigotmc.SpigotConfig.bungee) {
+        if (org.spigotmc.SpigotConfig.bungee || org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) { //Ketting - Paper - Add Velocity IP Forwarding Support
             return -1;
         } else {
             return this.configuration.getInt("settings.connection-throttle");

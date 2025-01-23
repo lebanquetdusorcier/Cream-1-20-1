@@ -1,15 +1,7 @@
 package org.kettingpowered.ketting.config;
 
 import org.jetbrains.annotations.NotNull;
-import org.kettingpowered.ketting.config.value.Value;
-import org.kettingpowered.ketting.config.value.types.BooleanValue;
-import org.kettingpowered.ketting.config.value.types.IntValue;
-import org.kettingpowered.ketting.core.Ketting;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import org.kettingpowered.ketting.config.value.types.*;
 
 public class KettingConfig extends AbstractConfig {
 
@@ -31,7 +23,7 @@ public class KettingConfig extends AbstractConfig {
                 "Github: https://github.com/kettingpowered/",
                 "Discord: https://discord.kettingpowered.org/",
                 ""
-        }, fileName, 2);
+        }, fileName, 3);
         load();
     }
 
@@ -50,5 +42,8 @@ public class KettingConfig extends AbstractConfig {
     public final BooleanValue HALT_HALT = new BooleanValue("ketting.halt.halt", true, "If true, Ketting will call Runtime.getRuntime().halt(), once it is supposed to regularly shutdown. Overrides 'ketting.halt.exit'. THIS SKIPS SHUTDOWN HOOKS. SOME STUFF MIGHT BREAK! IF YOU CAN, ENABLE 'ketting.halt.exit' INSTEAD!");
     public final IntValue HALT_THREADDUMP_SLEEP = new IntValue("ketting.halt.thread_dump.sleep_time", 5000, "If true, Ketting will sleep this many seconds before printing the thread-dump.");
     public final BooleanValue HALT_THREADDUMP_ENABLE = new BooleanValue("ketting.halt.thread_dump.enabled", false, "If true, Ketting will print a Stacktrace of all threads once the server is supposed to regularly shutdown. This option is intended to aid debugging for the option 'ketting.force.halt'.");
+
+    public final BooleanValue VELOCITY_SUPPORT_ENABLED = new BooleanValue("ketting.velocity_support.enabled", false, "If true, Ketting will enable support for Velocity proxy forwarding.");
+    public final StringValue VELOCITY_FORWARDING_SECRET = new StringValue("ketting.velocity_support.forwarding-secret", "", "The secret key used for Velocity proxy forwarding. This should be the same as the contents of the 'forwarding.secret' file in your Velocity server root.");
     //End of config values
 }
