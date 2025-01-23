@@ -399,11 +399,14 @@
        p_8648_.setOldPosAndRot();
        ProfilerFiller profilerfiller = this.getProfiler();
        ++p_8648_.tickCount;
-@@ -682,11 +_,13 @@
+@@ -681,12 +_,16 @@
+          return BuiltInRegistries.ENTITY_TYPE.getKey(p_8648_.getType()).toString();
        });
        profilerfiller.incrementCounter("tickNonPassenger");
++      if (p_8648_.canUpdate()) { //Ketting - forge 47.3.24 blocks ticking if canUpdate is false, we also want to block postTick
        p_8648_.tick();
 +      p_8648_.postTick(); // CraftBukkit
++      } //Ketting
        this.getProfiler().pop();
  
        for(Entity entity : p_8648_.getPassengers()) {
