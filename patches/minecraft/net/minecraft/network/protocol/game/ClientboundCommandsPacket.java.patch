@@ -1,13 +1,10 @@
 --- a/net/minecraft/network/protocol/game/ClientboundCommandsPacket.java
 +++ b/net/minecraft/network/protocol/game/ClientboundCommandsPacket.java
-@@ -220,6 +_,10 @@
+@@ -220,6 +_,7 @@
        }
  
        public void write(FriendlyByteBuf p_237658_) {
-+         //Ketting start - ambassador support
-+         org.kettingpowered.ketting.velocity.AmbassadorSupport.writeStub(p_237658_, this.id, this.argumentType, this.suggestionId);
-+         if (true) return;
-+         //Ketting end
++         if (org.kettingpowered.ketting.velocity.AmbassadorSupport.writeStub(p_237658_, this.id, this.argumentType, this.suggestionId)) return; //Ketting - ambassador support
           p_237658_.writeUtf(this.id);
           serializeCap(p_237658_, this.argumentType);
           if (this.suggestionId != null) {
