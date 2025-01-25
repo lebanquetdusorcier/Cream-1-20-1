@@ -6,7 +6,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.kettingpowered.ketting.config.KettingConfig;
 
 import java.util.Set;
 
@@ -70,7 +69,7 @@ public final class AmbassadorSupport {
     //Copied from https://github.com/adde0109/Proxy-Compatible-Forge/blob/1.20.x/src/main/java/org/adde0109/pcf/mixin/command/WrappableArgumentNodeStubMixin.java
     private static final int MOD_ARGUMENT_INDICATOR = -256;
     public static boolean writeStub(FriendlyByteBuf buffer, String stubId, ArgumentTypeInfo.Template<?> argumentType, ResourceLocation suggestionId) {
-        if (!KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) return false;
+        if (!ProxySupport.supportEnabled()) return false;
         buffer.writeUtf(stubId);
 
         var typeInfo = argumentType.type();

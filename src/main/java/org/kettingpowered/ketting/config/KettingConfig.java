@@ -44,6 +44,7 @@ public class KettingConfig extends AbstractConfig {
     public final BooleanValue HALT_THREADDUMP_ENABLE = new BooleanValue("ketting.halt.thread_dump.enabled", false, "If true, Ketting will print a Stacktrace of all threads once the server is supposed to regularly shutdown. This option is intended to aid debugging for the option 'ketting.force.halt'.");
 
     public final BooleanValue VELOCITY_SUPPORT_ENABLED = new BooleanValue("ketting.velocity_support.enabled", false, "If true, Ketting will enable support for Velocity proxy forwarding.");
+    public final BooleanValue VELOCITY_LEGACY_FORWARDING = new BooleanValue("ketting.velocity_support.legacy_forwarding", false, "If true, Ketting will use the legacy Velocity forwarding method. This is not recommended, as it is less secure.");
     public final StringValue VELOCITY_FORWARDING_SECRET = new StringValue("ketting.velocity_support.forwarding-secret", "", "The secret key used for Velocity proxy forwarding. This should be the same as the contents of the 'forwarding.secret' file in your Velocity server root.");
     //End of config values
 }

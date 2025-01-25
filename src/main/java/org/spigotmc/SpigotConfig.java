@@ -233,7 +233,7 @@ public class SpigotConfig
             set( "settings.bungeecord", false );
             System.out.println( "Oudated config, disabling BungeeCord support!" );
         }
-        bungee = getBoolean( "settings.bungeecord", false );
+        bungee = getBoolean( "settings.bungeecord", false ) || org.kettingpowered.ketting.velocity.ProxySupport.isLegacyForwarding(); //Ketting
     }
 
     private static void nettyThreads()

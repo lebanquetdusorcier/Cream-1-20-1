@@ -17,11 +17,12 @@
     private static final Component IGNORE_STATUS_REASON = Component.translatable("disconnect.ignoring_status_request");
     private final MinecraftServer server;
     private final Connection connection;
-@@ -21,28 +_,88 @@
+@@ -21,28 +_,89 @@
     }
  
     public void handleIntention(ClientIntentionPacket p_9975_) {
 +      if (!net.minecraftforge.server.ServerLifecycleHooks.handleServerLogin(p_9975_, this.connection)) return;
++      this.connection.hostname = p_9975_.getHostName() + ":" + p_9975_.getPort(); // CraftBukkit  - set hostname
        switch (p_9975_.getIntention()) {
           case LOGIN:
              this.connection.setProtocol(ConnectionProtocol.LOGIN);
@@ -74,9 +75,9 @@
              } else {
                 this.connection.setListener(new ServerLoginPacketListenerImpl(this.server, this.connection));
 +               // Spigot Start
-+               String[] split = p_9975_.getHostName().split("\00");
++               String[] split = p_9975_.fullHostName.split("\00"); //Ketting
 +               if (org.spigotmc.SpigotConfig.bungee) {
-+                  if ( ( split.length == 3 || split.length == 4 ) && ( HOST_PATTERN.matcher( split[1] ).matches() ) ) {
++                  if ( ( split.length == 3 + 1 || split.length == 4 + 1 ) && ( HOST_PATTERN.matcher( split[1] ).matches() ) ) { //Ketting - + 1 for the forge network version
 +                     connection.hostname = split[0];
 +                     connection.address = new java.net.InetSocketAddress(split[1], ((java.net.InetSocketAddress) connection.getRemoteAddress()).getPort());
 +                     connection.spoofedUUID = com.mojang.util.UUIDTypeAdapter.fromString( split[2] );
@@ -87,11 +88,11 @@
 +                     this.connection.disconnect(chatmessage);
 +                     return;
 +                  }
-+                  if ( split.length == 4 )
++                  if ( split.length == 4 + 1 ) //Ketting - + 1 for the forge network version
 +                  {
 +                     connection.spoofedProfile = gson.fromJson(split[3], com.mojang.authlib.properties.Property[].class);
 +                  }
-+               } else if ( ( split.length == 3 || split.length == 4 ) && ( HOST_PATTERN.matcher( split[1] ).matches() ) ) {
++               } else if ( ( split.length == 3 + 1 || split.length == 4 + 1 ) && ( HOST_PATTERN.matcher( split[1] ).matches() ) ) { //Ketting - + 1 for the forge network version
 +                  Component chatmessage = Component.literal("Unknown data in login hostname, did you forget to enable BungeeCord in spigot.yml?");
 +                  this.connection.send(new ClientboundLoginDisconnectPacket(chatmessage));
 +                  this.connection.disconnect(chatmessage);

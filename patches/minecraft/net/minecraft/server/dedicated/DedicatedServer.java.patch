@@ -137,7 +137,7 @@
 +      // CraftBukkit end
 +
 +      // Ketting start - Paper - Add Velocity IP Forwarding Support
-+      boolean velocityEnabled = org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue();
++      boolean velocityEnabled = org.kettingpowered.ketting.velocity.ProxySupport.supportEnabled();
 +      String proxyFlavor = velocityEnabled ? "Velocity" : "BungeeCord";
 +      String proxyLink = velocityEnabled ? "https://docs.papermc.io/velocity/security" : "http://www.spigotmc.org/wiki/firewall-guide/";
        if (!this.usesAuthentication()) {

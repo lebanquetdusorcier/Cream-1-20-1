@@ -27,6 +27,20 @@ public final class ProxySupport {
     public static final byte MAX_SUPPORTED_FORWARDING_VERSION = MODERN_LAZY_SESSION;
     public static final ResourceLocation PLAYER_INFO_CHANNEL = new ResourceLocation("velocity", "player_info");
 
+    //Ketting start
+    public static boolean supportEnabled() {
+        return KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue();
+    }
+
+    public static boolean isModernForwarding() {
+        return supportEnabled() && !KettingConfig.getInstance().VELOCITY_LEGACY_FORWARDING.getValue();
+    }
+
+    public static boolean isLegacyForwarding() {
+        return supportEnabled() && KettingConfig.getInstance().VELOCITY_LEGACY_FORWARDING.getValue();
+    }
+    //Ketting end
+
     public static boolean checkIntegrity(final FriendlyByteBuf buf) {
         final byte[] signature = new byte[32];
         buf.readBytes(signature);

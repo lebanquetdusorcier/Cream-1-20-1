@@ -1,10 +1,9 @@
 --- a/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
 +++ b/net/minecraft/server/network/ServerLoginPacketListenerImpl.java
-@@ -52,6 +_,8 @@
+@@ -52,6 +_,7 @@
     private final String serverId = "";
     @Nullable
     private ServerPlayer delayedAcceptPlayer;
-+   private net.minecraft.server.level.ServerPlayer player; // CraftBukkit
 +   private int velocityLoginMessageId = -1; //Ketting - Paper - Add Velocity IP Forwarding Support
  
     public ServerLoginPacketListenerImpl(MinecraftServer p_10027_, Connection p_10028_) {
@@ -119,7 +118,7 @@
           } else {
 -            this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
 +            //Ketting start - Paper - Add Velocity IP Forwarding Support
-+            if (org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) {
++            if (org.kettingpowered.ketting.velocity.ProxySupport.isModernForwarding()) {
 +               this.velocityLoginMessageId = java.util.concurrent.ThreadLocalRandom.current().nextInt();
 +               net.minecraft.network.FriendlyByteBuf buf = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
 +               buf.writeByte(org.kettingpowered.ketting.velocity.ProxySupport.MAX_SUPPORTED_FORWARDING_VERSION);
@@ -204,7 +203,7 @@
 +
 +      public void fireEvents() throws Exception {
 +         //Ketting start - Paper - Add Velocity IP Forwarding Support
-+         if (ServerLoginPacketListenerImpl.this.velocityLoginMessageId == -1 && org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) {
++         if (ServerLoginPacketListenerImpl.this.velocityLoginMessageId == -1 && org.kettingpowered.ketting.velocity.ProxySupport.isModernForwarding()) {
 +            disconnect("This server requires you to connect with Velocity.");
 +            return;
 +         }
@@ -255,7 +254,7 @@
  
 +   //Ketting start - Paper - Add Velocity IP Forwarding Support
 +   private boolean handleProxyResponse(ServerboundCustomQueryPacket packet) {
-+      if (!org.kettingpowered.ketting.config.KettingConfig.getInstance().VELOCITY_SUPPORT_ENABLED.getValue()) return false;
++      if (!org.kettingpowered.ketting.velocity.ProxySupport.isModernForwarding()) return false;
 +      if (packet.getIndex() != this.velocityLoginMessageId) return false;
 +
 +      net.minecraft.network.FriendlyByteBuf payload = packet.getInternalData();
