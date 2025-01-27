@@ -167,10 +167,7 @@ public class ForgeInject {
             try {
                 Class<?> match = CraftBlockData.getClosestBlockDataClass(block.getClass());
                 Class<?> blockDataClass = match == null ? null : match.getInterfaces()[0];
-                var material = blockDataClass == null ? Material.addMaterial(enumName, ordinal,
-                        CraftNamespacedKey.fromMinecraft(location), true, item != null && item != Items.AIR)
-                        : Material.addMaterial(enumName, ordinal, blockDataClass,
-                        CraftNamespacedKey.fromMinecraft(location), true, item != null && item != Items.AIR);
+                var material = Material.addMaterial(enumName, ordinal, blockDataClass, CraftNamespacedKey.fromMinecraft(location), true, item != null && item != Items.AIR);
                 if (material == null) {
                     Ketting.LOGGER.warn("Could not inject block into Bukkit: " + enumName);
                     continue;
@@ -183,9 +180,8 @@ public class ForgeInject {
                 if (match != null)
                     MATERIALS.computeIfAbsent(match, k -> new ArrayList<>()).add(new AbstractMap.SimpleEntry<>(block, material));
                 debug("Injecting Forge Blocks into Bukkit: " + material.name());
-                if (blockDataClass != null) {
-                    debug("Assigning block data " + blockDataClass + " to " + material.name() + " because it extends " + block.getClass());
-                }
+                if (blockDataClass != null)
+                    debug("Assigning block data " + blockDataClass + " to " + material.name());
             } catch (Throwable e) {
                 Ketting.LOGGER.error("Could not inject block into Bukkit: {}.", enumName, e);
             }
@@ -205,8 +201,7 @@ public class ForgeInject {
             // Material may already be registered by a block
             if (material == null) {
                 try {
-                    material = Material.addMaterial(enumName, ordinal, CraftNamespacedKey.fromMinecraft(location),
-                            false, true);
+                    material = Material.addMaterial(enumName, ordinal, null, CraftNamespacedKey.fromMinecraft(location), false, true);
                     if (material == null) {
                         Ketting.LOGGER.warn("Could not inject item into Bukkit: " + enumName);
                         continue;
@@ -272,6 +267,7 @@ public class ForgeInject {
         registerMaterialsFor(materials, CraftSuspiciousSand.class, BrushableBlockEntity.class, CraftSuspiciousSand::new);
         registerMaterialsFor(materials, CraftBrushableBlock.class, BrushableBlockEntity.class, CraftBrushableBlock::new);
         registerChests(materials);
+        registerExceptions(materials);
         materials.keySet().forEach(craftClass -> {
             debugWarn("Could not find a matching block entity for " + craftClass.getSimpleName());
         });
@@ -384,6 +380,51 @@ public class ForgeInject {
                 });
             }
         }
+    }
+
+    public static final Map<String, com.google.common.base.Function<net.minecraft.world.level.block.state.BlockState, org.bukkit.craftbukkit.v1_20_R1.block.data.CraftBlockData>> MOD_CLASS_EXCEPTIONS = Map.of(
+            "com.mrcrayfish.goldenhopper.world.level.block.AbstractHopperBlock", org.bukkit.craftbukkit.v1_20_R1.block.impl.CraftHopper::new
+    );
+    private static final Map<Class, Class<? extends CraftBlockEntityState>> CUSTOM_CRAFT_CLASSES = Map.of(
+            org.bukkit.craftbukkit.v1_20_R1.block.impl.CraftHopper.class, org.kettingpowered.ketting.entity.block.CraftCustomHopper.class
+    );
+    private static void registerExceptions(@NotNull Map<Class<?>, List<Map.Entry<Block, Material>>> materialsMap) {
+        for (var it = materialsMap.keySet().iterator(); it.hasNext(); ) {
+            var craftClass = it.next();
+            for (var entry : materialsMap.get(craftClass)) {
+                final Block block = entry.getKey();
+                final Material material = entry.getValue();
+
+                if (block instanceof EntityBlock entityBlock) {
+                    if (!CUSTOM_CRAFT_CLASSES.containsKey(craftClass)) {
+                        debugWarn("Could not find a matching block entity translation for " + craftClass.getSimpleName());
+                        continue;
+                    }
+                    var customCraftClass = CUSTOM_CRAFT_CLASSES.get(craftClass);
+                    debug("Registering " + material.name() + " as " + customCraftClass.getSimpleName());
+                    CraftBlockStates.register(material, customCraftClass, translateCraftClass(customCraftClass, material), (pos, state) -> {
+                        try {
+                            return entityBlock.newBlockEntity(pos, state);
+                        } catch (Throwable e) {
+                            Ketting.LOGGER.error("Could not register " + material.name() + " as " + craftClass.getSimpleName(), e);
+                            return null;
+                        }
+                    });
+                }
+            }
+            it.remove();
+        }
+    }
+
+    private static <T extends BlockEntity, B extends CraftBlockEntityState<T>> BiFunction<World, T, B> translateCraftClass(Class<B> craftClass, Material material) {
+        return (world, blockEntity) -> {
+            try {
+                return craftClass.getDeclaredConstructor(org.bukkit.World.class, RandomizableContainerBlockEntity.class).newInstance(world, blockEntity);
+            } catch (Throwable e) {
+                Ketting.LOGGER.error("Could not register {} as {}", material.name(), craftClass.getSimpleName(), e);
+                return null;
+            }
+        };
     }
 
     private static void addForgeEnchantments() {

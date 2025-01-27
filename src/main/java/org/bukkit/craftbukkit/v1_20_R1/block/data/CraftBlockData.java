@@ -593,28 +593,41 @@ public class CraftBlockData implements BlockData {
         return MAP.getOrDefault(data.getBlock().getClass(), CraftBlockData::new).apply(data);
     }
 
-    //Ketting start - from Magma
+    //Ketting start
     public static Class<?> getClosestBlockDataClass(Class<? extends Block> blockClass) {
+        //Search for vanilla cases
         if (MAP.containsKey(blockClass))
             return MAP.get(blockClass).apply(null).getClass();
 
-        // Try obtaining closest CraftBlockData subclass
-        Class<?> superClass = blockClass.getSuperclass();
-        Class<?> matchedClass = null;
-        Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData> matchedFunction = null;
+        //Find special cases
+        if (org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.containsKey(blockClass.getName()))
+            return registerAndReturn(blockClass, org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.get(blockClass.getName()));
 
+        for (Class<?> iface : blockClass.getInterfaces()) {
+            if (org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.containsKey(iface.getName()))
+                return registerAndReturn(blockClass, org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.get(iface.getName()));
+        }
+
+        //Check super classes for a match
+        var match = findInSuperClasses(blockClass);
+        return match != null ? registerAndReturn(blockClass, match) : null;
+    }
+
+    private static Class<?> registerAndReturn(Class<? extends Block> blockClass, Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData> function) {
+        register(blockClass, function);
+        return function.apply(null).getClass();
+    }
+
+    private static Function<net.minecraft.world.level.block.state.BlockState, CraftBlockData> findInSuperClasses(Class<?> blockClass) {
+        Class<?> superClass = blockClass.getSuperclass();
         while (superClass != null) {
-            if (MAP.containsKey(superClass)) {
-                matchedFunction = MAP.get(superClass);
-                matchedClass = matchedFunction.apply(null).getClass();
-                break;
-            }
+            if (MAP.containsKey(superClass))
+                return MAP.get(superClass);
+            if (org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.containsKey(superClass.getName()))
+                return org.kettingpowered.ketting.inject.ForgeInject.MOD_CLASS_EXCEPTIONS.get(superClass.getName());
             superClass = superClass.getSuperclass();
         }
-        if (matchedClass == null)
-            return null;
-        register(blockClass, matchedFunction);
-        return matchedClass;
+        return null;
     }
     //Ketting end
 

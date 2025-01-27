@@ -11004,22 +11004,14 @@ public enum Material implements Keyed, Translatable {
         return Bukkit.getDataPackManager().isEnabledByFeature(this, world);
     }
 
-    //Ketting start <Used from https://git.magmafoundation.org/magmafoundation/Magma-1-18-x/blob/1.18.x/src/main/java/org/bukkit/Material.java>
-    public static Material addMaterial(String name, int id, NamespacedKey key, boolean block, boolean item) {
+    //Ketting start
+    private static final List<Class<?>> CTOR_ARGS_WITHOUT_DATA = List.of(Integer.TYPE, NamespacedKey.class, Boolean.TYPE, Boolean.TYPE);
+    private static final List<Class<?>> CTOR_ARGS_WITH_DATA = List.of(Integer.TYPE, Integer.TYPE, Integer.TYPE, Class.class, NamespacedKey.class, Boolean.TYPE, Boolean.TYPE);
+    public static Material addMaterial(String name, int id, @Nullable Class<?> data, NamespacedKey key, boolean block, boolean item) {
         try {
-            //final int id, final int stack, final int durability, /*@NotNull*/ final Class<?> data
-            var material = EnumHelper.makeEnum(Material.class, name, id, List.of(Integer.TYPE, NamespacedKey.class, Boolean.TYPE, Boolean.TYPE), List.of(id, key, block, item));
-            BY_NAME.put(name, material);
-            return material;
-        } catch (Throwable e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Material addMaterial(String name, int id, Class<?> data, NamespacedKey key, boolean block, boolean item) {
-        try {
-            var material = EnumHelper.makeEnum(Material.class, name, id, List.of(Integer.TYPE, Integer.TYPE, Integer.TYPE, Class.class, NamespacedKey.class, Boolean.TYPE, Boolean.TYPE), List.of(id, 64, 0, data, key, block, item));
+            var types = data == null ? CTOR_ARGS_WITHOUT_DATA : CTOR_ARGS_WITH_DATA;
+            var args = data == null ? List.of(id, key, block, item) : List.of(id, 64, 0, data, key, block, item);
+            var material = EnumHelper.makeEnum(Material.class, name, id, types, args);
             BY_NAME.put(name, material);
             return material;
         } catch (Throwable e) {
