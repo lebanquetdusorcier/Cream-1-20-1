@@ -5,7 +5,7 @@
     private final int port;
     private final ConnectionProtocol intention;
 +   private String fmlVersion = net.minecraftforge.network.NetworkConstants.NETVERSION;
-+   public String fullHostName = null; //Ketting - velocity legacy forwarding
++   public String fullHostName = ""; //Ketting - velocity legacy forwarding
  
     public ClientIntentionPacket(String p_134726_, int p_134727_, ConnectionProtocol p_134728_) {
        this.protocolVersion = SharedConstants.getCurrentVersion().getProtocolVersion();
