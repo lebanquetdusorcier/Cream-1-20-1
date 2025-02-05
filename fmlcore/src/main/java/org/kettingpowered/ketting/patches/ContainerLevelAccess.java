@@ -3,7 +3,6 @@ package org.kettingpowered.ketting.patches;
 import io.izzel.arclight.api.PluginPatcher;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
