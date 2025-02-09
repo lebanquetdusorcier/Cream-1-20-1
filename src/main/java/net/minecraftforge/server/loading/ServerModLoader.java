@@ -30,6 +30,10 @@ public class ServerModLoader
             ModLoader.get().gatherAndInitializeMods(ModWorkManager.syncExecutor(), ModWorkManager.parallelExecutor(), ()->{});
             ModLoader.get().loadMods(ModWorkManager.syncExecutor(), ModWorkManager.parallelExecutor(), ()->{});
             ModLoader.get().finishMods(ModWorkManager.syncExecutor(), ModWorkManager.parallelExecutor(), ()->{});
+        //Ketting start - InjectProtect
+        } catch (org.spongepowered.asm.mixin.throwables.MixinError mixin) {
+            org.kettingpowered.ketting.core.injectprotect.InjectProtect.onBootErrorCaught(mixin);
+        //Ketting end - InjectProtect
         } catch (LoadingFailedException error) {
             ServerModLoader.hasErrors = true;
             // In case its not loaded properly

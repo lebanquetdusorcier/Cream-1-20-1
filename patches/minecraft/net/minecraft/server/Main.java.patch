@@ -79,7 +79,7 @@
  
           Path path = optionset.valueOf(optionspec14);
           if (path != null) {
-@@ -102,29 +_,62 @@
+@@ -102,29 +_,56 @@
              JvmProfiler.INSTANCE.start(Environment.SERVER);
           }
  
@@ -101,13 +101,7 @@
           Util.startTimerHackThread();
           Path path1 = Paths.get("server.properties");
 -         DedicatedServerSettings dedicatedserversettings = new DedicatedServerSettings(path1);
-+         //Ketting start - InjectProtect
-+         try {
-+            if (!optionset.has(optionspec1)) net.minecraftforge.server.loading.ServerModLoader.load(); // Load mods before we load almost anything else anymore. Single spot now. Only loads if they haven't passed the initserver param
-+         } catch (org.spongepowered.asm.mixin.throwables.MixinError mixin) {
-+            org.kettingpowered.ketting.core.injectprotect.InjectProtect.onBootErrorCaught(mixin);
-+         }
-+         //Ketting end
++         if (!optionset.has(optionspec1)) net.minecraftforge.server.loading.ServerModLoader.load(); // Load mods before we load almost anything else anymore. Single spot now. Only loads if they haven't passed the initserver param
 +         net.minecraft.server.dedicated.Settings.ketting$options.set(optionset); // Ketting
 +         DedicatedServerSettings dedicatedserversettings = new DedicatedServerSettings(((java.io.File) optionset.valueOf("config")).toPath()); // CraftBukkit - CLI argument support
           dedicatedserversettings.forceSave();
