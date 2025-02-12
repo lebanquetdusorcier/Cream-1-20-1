@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Objects;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.Item;
@@ -385,6 +386,8 @@ public final class CraftItemStack extends ItemStack {
             return false;
         }
         if (CraftItemFactory.instance().equals(itemMeta, null)) {
+            if (BuiltInRegistries.ITEM.getKey(item.getItem()).getNamespace().equals("create"))
+                return false; //Ketting - quick dirty fix for create filters
             item.setTag(null);
             return true;
         }

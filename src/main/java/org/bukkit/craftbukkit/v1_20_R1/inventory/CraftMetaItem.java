@@ -291,7 +291,6 @@ class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDataMeta {
             //EvilCraft
             "Name",
             //Create
-            "Items",
             "Schedule",
             //The rest
             "map_is_scaling",
