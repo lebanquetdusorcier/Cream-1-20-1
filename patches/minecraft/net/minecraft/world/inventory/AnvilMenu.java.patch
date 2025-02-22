@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/net/minecraft/world/inventory/AnvilMenu.java
-@@ -40,6 +_,11 @@
+@@ -40,6 +_,21 @@
     private static final int ADDITIONAL_SLOT_X_PLACEMENT = 76;
     private static final int RESULT_SLOT_X_PLACEMENT = 134;
     private static final int SLOT_Y_PLACEMENT = 47;
@@ -9,6 +9,16 @@
 +   public int maximumRepairCost = 40;
 +   private org.bukkit.craftbukkit.v1_20_R1.inventory.CraftInventoryView bukkitEntity;
 +   // CraftBukkit end
++   
++   // Ketting start - Mixins can replace values, but plugins take priority.
++   private int getMaxRepairCost(int value) {
++      if (this.maximumRepairCost == 40) {
++         return value;
++      } else {
++         return this.maximumRepairCost;
++      }
++   }
++   // Ketting end
  
     public AnvilMenu(int p_39005_, Inventory p_39006_) {
        this(p_39005_, p_39006_, ContainerLevelAccess.NULL);
@@ -108,12 +118,12 @@
  
 -         if (k == i && k > 0 && this.cost.get() >= 40) {
 -            this.cost.set(39);
-+         if (k == i && k > 0 && this.cost.get() >= maximumRepairCost) { // CraftBukkit
-+            this.cost.set(maximumRepairCost - 1); // CraftBukkit
++         if (k == i && k > 0 && this.cost.get() >= getMaxRepairCost(40)) { // CraftBukkit // Ketting
++            this.cost.set(getMaxRepairCost(39)); // CraftBukkit // Ketting
           }
  
 -         if (this.cost.get() >= 40 && !this.player.getAbilities().instabuild) {
-+         if (this.cost.get() >= maximumRepairCost && !this.player.getAbilities().instabuild) { // CraftBukkit
++         if (this.cost.get() >= getMaxRepairCost(40) && !this.player.getAbilities().instabuild) { // CraftBukkit // Ketting
              itemstack1 = ItemStack.EMPTY;
           }
  
