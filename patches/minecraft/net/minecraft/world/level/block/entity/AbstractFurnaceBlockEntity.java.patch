@@ -86,13 +86,11 @@
        ContainerHelper.saveAllItems(p_187452_, this.items);
        CompoundTag compoundtag = new CompoundTag();
        this.recipesUsed.forEach((p_187449_, p_187450_) -> {
-@@ -249,28 +_,56 @@
-          }
+@@ -250,27 +_,55 @@
  
           int i = p_155017_.getMaxStackSize();
--         if (!p_155017_.isLit() && canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
+          if (!p_155017_.isLit() && canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
 -            p_155017_.litTime = p_155017_.getBurnDuration(itemstack);
-+         if (!p_155017_.isLit() && p_155017_.canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
 +            // CraftBukkit start
 +            org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack fuel = org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack.asCraftMirror(itemstack);
 +
@@ -124,8 +122,7 @@
              }
           }
  
--         if (p_155017_.isLit() && canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
-+         if (p_155017_.isLit() && p_155017_.canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
+          if (p_155017_.isLit() && canBurn(p_155014_.registryAccess(), recipe, p_155017_.items, i)) {
 +            // CraftBukkit start
 +            if (recipe != null && p_155017_.cookingProgress == 0) {
 +               org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack source = org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack.asCraftMirror(p_155017_.items.get(0));
