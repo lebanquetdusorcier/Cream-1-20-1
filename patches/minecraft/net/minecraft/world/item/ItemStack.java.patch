@@ -156,7 +156,7 @@
        Player player = p_41662_.getPlayer();
        BlockPos blockpos = p_41662_.getClickedPos();
        BlockInWorld blockinworld = new BlockInWorld(p_41662_.getLevel(), blockpos, false);
-@@ -233,10 +_,190 @@
+@@ -233,10 +_,170 @@
           return InteractionResult.PASS;
        } else {
           Item item = this.getItem();
@@ -271,26 +271,6 @@
 +                  }
 +
 +                  world.markAndNotifyBlock(newblockposition, null, oldBlock, block, updateFlag, 512); // send null chunk as chunk.k() returns false by this point
-+               }
-+
-+               // Special case juke boxes as they update their tile entity. Copied from ItemRecord.
-+               // PAIL: checkme on updates.
-+               if (this.item instanceof RecordItem) {
-+                  net.minecraft.world.level.block.entity.BlockEntity tileentity = world.getBlockEntity(blockpos);
-+
-+                  if (tileentity instanceof net.minecraft.world.level.block.entity.JukeboxBlockEntity jukebox) {
-+                     // There can only be one
-+                     ItemStack record = this.copy();
-+                     if (!record.isEmpty()) {
-+                        record.setCount(1);
-+                     }
-+
-+                     jukebox.setFirstItem(record);
-+                     world.gameEvent(net.minecraft.world.level.gameevent.GameEvent.BLOCK_CHANGE, blockpos, net.minecraft.world.level.gameevent.GameEvent.Context.of(player, world.getBlockState(blockpos)));
-+                  }
-+
-+                  this.shrink(1);
-+                  player.awardStat(Stats.PLAY_RECORD);
 +               }
 +
 +               if (this.item == Items.WITHER_SKELETON_SKULL) { // Special case skulls to allow wither spawns to be cancelled

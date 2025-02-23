@@ -43,14 +43,23 @@
     }
  
     public InteractionResult useOn(UseOnContext p_43048_) {
-@@ -42,6 +_,7 @@
-       if (blockstate.is(Blocks.JUKEBOX) && !blockstate.getValue(JukeboxBlock.HAS_RECORD)) {
-          ItemStack itemstack = p_43048_.getItemInHand();
-          if (!level.isClientSide) {
-+            if (true) return InteractionResult.SUCCESS; // CraftBukkit - handled in ItemStack
-             Player player = p_43048_.getPlayer();
+@@ -46,7 +_,15 @@
              BlockEntity blockentity = level.getBlockEntity(blockpos);
              if (blockentity instanceof JukeboxBlockEntity) {
+                JukeboxBlockEntity jukeboxblockentity = (JukeboxBlockEntity)blockentity;
+-               jukeboxblockentity.setFirstItem(itemstack.copy());
++
++               // CraftBukkit start - There can only be one
++               ItemStack record = itemstack.copy();
++               if (!record.isEmpty()) {
++                  record.setCount(1);
++               }
++               jukeboxblockentity.setFirstItem(record);
++               // CraftBukkit end
++               
+                level.gameEvent(GameEvent.BLOCK_CHANGE, blockpos, GameEvent.Context.of(player, blockstate));
+             }
+ 
 @@ -80,7 +_,7 @@
     }
  
