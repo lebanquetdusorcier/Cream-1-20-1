@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Function;
 
 public interface IForgeModelBaker

@@ -5,7 +5,6 @@
 
 package net.minecraftforge.client.model.geometry;
 
-import java.util.function.Function;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -16,6 +15,8 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.IModelBuilder;
+
+import java.util.function.Function;
 
 /**
  * Base class for implementations of {@link IUnbakedGeometry} which do not wish to handle model creation themselves,
@@ -30,8 +31,10 @@ public abstract class SimpleUnbakedGeometry<T extends SimpleUnbakedGeometry<T>> 
 
         var renderTypeHint = context.getRenderTypeHint();
         var renderTypes = renderTypeHint != null ? context.getRenderType(renderTypeHint) : RenderTypeGroup.EMPTY;
+        var renderTypeFastHint = context.getRenderTypeFastHint();
+        var renderTypesFast = renderTypeFastHint != null ? context.getRenderType(renderTypeFastHint) : RenderTypeGroup.EMPTY;
         IModelBuilder<?> builder = IModelBuilder.of(context.useAmbientOcclusion(), context.useBlockLight(), context.isGui3d(),
-                context.getTransforms(), overrides, particle, renderTypes);
+                context.getTransforms(), overrides, particle, renderTypes, renderTypesFast);
 
         addQuads(context, builder, baker, spriteGetter, modelState, modelLocation);
 

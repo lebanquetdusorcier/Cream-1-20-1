@@ -8,12 +8,6 @@ package net.minecraftforge.client.model.generators;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -22,6 +16,13 @@ import net.minecraft.server.packs.PackType;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ExistingFileHelper.ResourceType;
 import org.jetbrains.annotations.VisibleForTesting;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public abstract class ModelProvider<T extends ModelBuilder<T>> implements DataProvider {
 
@@ -369,7 +370,8 @@ public abstract class ModelProvider<T extends ModelBuilder<T>> implements DataPr
     }
 
     public T leaves(String name, ResourceLocation texture) {
-        return singleTexture(name, BLOCK_FOLDER + "/leaves", "all", texture);
+        return singleTexture(name, BLOCK_FOLDER + "/leaves", "all", texture)
+            .renderType("cutout_mipped", "solid");
     }
 
     /**

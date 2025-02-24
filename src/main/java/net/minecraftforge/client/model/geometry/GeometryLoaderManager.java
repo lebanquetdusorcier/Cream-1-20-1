@@ -8,7 +8,6 @@ package net.minecraftforge.client.model.geometry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.model.ElementsModel;
 import net.minecraftforge.fml.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

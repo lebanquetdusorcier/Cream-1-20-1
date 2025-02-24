@@ -15,7 +15,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.IQuadTransformer;
-
 import org.joml.Vector3f;
 
 import java.util.Objects;

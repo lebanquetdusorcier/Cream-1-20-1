@@ -81,7 +81,7 @@ public abstract class ModelEvent extends Event
      * Fired when the {@link ModelManager} is notified of the resource manager reloading.
      * Called after the model registry is set up and cached in the {@link net.minecraft.client.renderer.block.BlockModelShaper}.<br>
      * The model registry given by this event is unmodifiable. To modify the model registry, use
-     * {@link ModelEvent.ModifyBakingResult} instead.
+     * {@link ModifyBakingResult} instead.
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.</p>
      *
@@ -128,7 +128,7 @@ public abstract class ModelEvent extends Event
     }
 
     /**
-     * Fired when the {@link net.minecraft.client.resources.model.ModelBakery} is notified of the resource manager reloading.
+     * Fired when the {@link ModelBakery} is notified of the resource manager reloading.
      * Allows developers to register models to be loaded, along with their dependencies.
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.</p>

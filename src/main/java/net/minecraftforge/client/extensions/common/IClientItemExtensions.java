@@ -63,7 +63,7 @@ public interface IClientItemExtensions
     }
 
     /**
-      * This method returns an ArmPose that can be defined using the {@link net.minecraft.client.model.HumanoidModel.ArmPose#create(String, boolean, IArmPoseTransformer)} method.
+      * This method returns an ArmPose that can be defined using the {@link HumanoidModel.ArmPose#create(String, boolean, IArmPoseTransformer)} method.
       * This allows for creating custom item use animations.
       *
       * @param entityLiving The entity holding the item

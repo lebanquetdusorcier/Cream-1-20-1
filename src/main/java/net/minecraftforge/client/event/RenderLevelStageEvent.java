@@ -5,13 +5,7 @@
 
 package net.minecraftforge.client.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -27,6 +21,10 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.joml.Matrix4f;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Fires at various times during LevelRenderer.renderLevel.
@@ -126,7 +124,7 @@ public class RenderLevelStageEvent extends Event
     }
 
     /**
-     * Use to create a custom {@linkplain RenderLevelStageEvent.Stage stages}.
+     * Use to create a custom {@linkplain Stage stages}.
      * Fired after the LevelRenderer has been created.
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}. </p>

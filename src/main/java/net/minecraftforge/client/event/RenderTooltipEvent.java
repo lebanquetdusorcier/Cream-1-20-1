@@ -28,9 +28,9 @@ import java.util.List;
  * Fired during tooltip rendering.
  * See the various subclasses for listening to specific events.
  *
- * @see RenderTooltipEvent.GatherComponents
- * @see RenderTooltipEvent.Pre
- * @see RenderTooltipEvent.Color
+ * @see GatherComponents
+ * @see Pre
+ * @see Color
  */
 public abstract class RenderTooltipEvent extends Event
 {
@@ -113,7 +113,7 @@ public abstract class RenderTooltipEvent extends Event
      *
      * <p>This event is {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.
      * If this event is cancelled, then the list of components will be empty, causing the tooltip to not be rendered and
-     * the corresponding {@link RenderTooltipEvent.Pre} and {@link RenderTooltipEvent.Color} to not be fired.</p>
+     * the corresponding {@link Pre} and {@link Color} to not be fired.</p>
      *
      * <p>This event is fired on the {@linkplain MinecraftForge#EVENT_BUS main Forge event bus},
      * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>
@@ -202,7 +202,7 @@ public abstract class RenderTooltipEvent extends Event
      *
      * <p>This event is {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.
      * If this event is cancelled, then the tooltip will not be rendered and the corresponding
-     * {@link RenderTooltipEvent.Color} will not be fired.</p>
+     * {@link Color} will not be fired.</p>
      *
      * <p>This event is fired on the {@linkplain MinecraftForge#EVENT_BUS main Forge event bus},
      * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>

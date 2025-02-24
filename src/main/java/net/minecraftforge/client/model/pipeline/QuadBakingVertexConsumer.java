@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 /**
  * Vertex consumer that outputs {@linkplain BakedQuad baked quads}.
  * <p>
- * This consumer accepts data in {@link com.mojang.blaze3d.vertex.DefaultVertexFormat#BLOCK} and is not picky about
+ * This consumer accepts data in {@link DefaultVertexFormat#BLOCK} and is not picky about
  * ordering or missing elements, but will not automatically populate missing data (color will be black, for example).
  */
 public class QuadBakingVertexConsumer implements VertexConsumer

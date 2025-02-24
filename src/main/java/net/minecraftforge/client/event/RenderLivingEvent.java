@@ -26,8 +26,8 @@ import org.jetbrains.annotations.ApiStatus;
  *
  * @param <T> the living entity that is being rendered
  * @param <M> the model for the living entity
- * @see RenderLivingEvent.Pre
- * @see RenderLivingEvent.Post
+ * @see Pre
+ * @see Post
  * @see RenderPlayerEvent
  * @see LivingEntityRenderer
  */
@@ -108,7 +108,7 @@ public abstract class RenderLivingEvent<T extends LivingEntity, M extends Entity
      *
      * <p>This event is {@linkplain Cancelable cancelable}, and does not {@linkplain HasResult have a result}.
      * If this event is cancelled, then the entity will not be rendered and the corresponding
-     * {@link RenderLivingEvent.Post} will not be fired.</p>
+     * {@link Post} will not be fired.</p>
      *
      * <p>This event is fired on the {@linkplain MinecraftForge#EVENT_BUS main Forge event bus},
      * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>
@@ -127,7 +127,7 @@ public abstract class RenderLivingEvent<T extends LivingEntity, M extends Entity
     }
 
     /**
-     * Fired <b>after</b> an entity is rendered, if the corresponding {@link RenderLivingEvent.Post} is not cancelled.
+     * Fired <b>after</b> an entity is rendered, if the corresponding {@link Post} is not cancelled.
      *
      * <p>This event is not {@linkplain Cancelable cancelable}, and does not {@linkplain HasResult have a result}.</p>
      *

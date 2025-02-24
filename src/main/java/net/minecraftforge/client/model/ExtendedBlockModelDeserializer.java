@@ -5,20 +5,9 @@
 
 package net.minecraftforge.client.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.mojang.math.Transformation;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverride;
-import net.minecraft.client.renderer.block.model.ItemTransform;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.client.model.geometry.GeometryLoaderManager;
@@ -71,6 +60,12 @@ public class ExtendedBlockModelDeserializer extends BlockModel.Deserializer
         {
             var renderTypeHintName = GsonHelper.getAsString(jsonobject, "render_type");
             model.customData.setRenderTypeHint(new ResourceLocation(renderTypeHintName));
+        }
+
+        if (jsonobject.has("render_type_fast"))
+        {
+            var renderTypeHintName = GsonHelper.getAsString(jsonobject, "render_type_fast");
+            model.customData.setRenderTypeFastHint(new ResourceLocation(renderTypeHintName));
         }
 
         if (jsonobject.has("visibility"))

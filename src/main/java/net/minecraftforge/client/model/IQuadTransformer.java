@@ -7,7 +7,6 @@ package net.minecraftforge.client.model;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
-import com.mojang.math.Transformation;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 
 import java.util.Arrays;

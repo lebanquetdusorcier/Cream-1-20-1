@@ -24,7 +24,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.SkullBlock.Type;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,9 +47,9 @@ import java.util.function.Supplier;
  * <p>These events are fired on the {@linkplain FMLJavaModLoadingContext#getModEventBus() mod-specific event bus},
  * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>
  *
- * @see EntityRenderersEvent.RegisterLayerDefinitions
- * @see EntityRenderersEvent.RegisterRenderers
- * @see EntityRenderersEvent.AddLayers
+ * @see RegisterLayerDefinitions
+ * @see RegisterRenderers
+ * @see AddLayers
  */
 public abstract class EntityRenderersEvent extends Event implements IModBusEvent
 {
@@ -212,7 +211,7 @@ public abstract class EntityRenderersEvent extends Event implements IModBusEvent
     }
 
     /**
-     * Fired for registering additional {@linkplain net.minecraft.client.model.SkullModelBase skull models} at the appropriate time.
+     * Fired for registering additional {@linkplain SkullModelBase skull models} at the appropriate time.
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.</p>
      *
@@ -240,7 +239,7 @@ public abstract class EntityRenderersEvent extends Event implements IModBusEvent
         }
 
         /**
-         * Registers the constructor for a skull block with the given {@link SkullBlock.Type}.
+         * Registers the constructor for a skull block with the given {@link Type}.
          * These will be inserted into the maps used by the item, entity, and block model renderers at the appropriate
          * time.
          *
@@ -250,7 +249,7 @@ public abstract class EntityRenderersEvent extends Event implements IModBusEvent
          *              {@link EntityModelSet#bakeLayer(ModelLayerLocation)} and pass it to the constructor for
          *              {@link SkullModel}.
          */
-        public void registerSkullModel(SkullBlock.Type type, SkullModelBase model)
+        public void registerSkullModel(Type type, SkullModelBase model)
         {
             builder.put(type, model);
         }

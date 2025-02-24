@@ -5,13 +5,12 @@
 
 package net.minecraftforge.client;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.particle.FireworkParticles;
 import net.minecraft.world.item.FireworkRocketItem;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Keeps track of custom firework shape types, because Particle is client side only this can't be on the Shape itself.

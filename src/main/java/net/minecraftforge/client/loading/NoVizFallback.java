@@ -9,15 +9,10 @@ import com.mojang.blaze3d.platform.Monitor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.server.packs.resources.ReloadInstance;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.function.IntSupplier;
-import java.util.function.LongSupplier;
-import java.util.function.Supplier;
-
-import org.lwjgl.glfw.GLFW;
+import java.util.function.*;
 
 public final class NoVizFallback {
     private static long WINDOW;

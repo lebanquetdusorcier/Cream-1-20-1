@@ -6,20 +6,20 @@
 package net.minecraftforge.client.gui;
 
 import com.google.common.base.Strings;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.ErrorScreen;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.Util;
+import net.minecraft.client.gui.screens.ErrorScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.client.gui.widget.ExtendedButton;
 import net.minecraftforge.common.ForgeI18n;
 import net.minecraftforge.fml.LoadingFailedException;
 import net.minecraftforge.fml.ModLoadingException;
 import net.minecraftforge.fml.ModLoadingWarning;
-import net.minecraftforge.client.gui.widget.ExtendedButton;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -123,7 +123,7 @@ public class LoadingErrorScreen extends ErrorScreen {
             return this.width;
         }
 
-        public class LoadingMessageEntry extends ObjectSelectionList.Entry<LoadingMessageEntry> {
+        public class LoadingMessageEntry extends Entry<LoadingMessageEntry> {
             private final Component message;
             private final boolean center;
 

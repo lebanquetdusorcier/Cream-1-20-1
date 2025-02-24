@@ -11,26 +11,13 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -49,6 +36,9 @@ import net.minecraftforge.client.model.geometry.UnbakedGeometryHelper;
 import net.minecraftforge.common.util.ConcatenatedListView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * A model composed of several named children.
@@ -144,7 +134,7 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
             {
                 if (renderType == null || (state != null && entry.getValue().getRenderTypes(state, rand, data).contains(renderType)))
                 {
-                    quadLists.add(entry.getValue().getQuads(state, side, rand, CompositeModel.Data.resolve(data, entry.getKey()), renderType));
+                    quadLists.add(entry.getValue().getQuads(state, side, rand, Data.resolve(data, entry.getKey()), renderType));
                 }
             }
             return ConcatenatedListView.of(quadLists);
@@ -206,7 +196,7 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
         {
             var sets = new ArrayList<ChunkRenderTypeSet>();
             for (Map.Entry<String, BakedModel> entry : children.entrySet())
-                sets.add(entry.getValue().getRenderTypes(state, rand, CompositeModel.Data.resolve(data, entry.getKey())));
+                sets.add(entry.getValue().getRenderTypes(state, rand, Data.resolve(data, entry.getKey())));
             return ChunkRenderTypeSet.union(sets);
         }
 
@@ -243,6 +233,7 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
             private final ItemTransforms transforms;
             private TextureAtlasSprite particle;
             private RenderTypeGroup lastRenderTypes = RenderTypeGroup.EMPTY;
+            private RenderTypeGroup lastRenderTypesFast = RenderTypeGroup.EMPTY;
 
             private Builder(boolean isAmbientOcclusion, boolean isGui3d, boolean isSideLit, TextureAtlasSprite particle, ItemOverrides overrides, ItemTransforms transforms)
             {
@@ -256,27 +247,38 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
 
             public void addLayer(BakedModel model)
             {
-                flushQuads(null);
+                flushQuads(RenderTypeGroup.EMPTY, RenderTypeGroup.EMPTY);
                 children.add(model);
             }
 
             private void addLayer(RenderTypeGroup renderTypes, List<BakedQuad> quads)
             {
-                var modelBuilder = IModelBuilder.of(isAmbientOcclusion, isSideLit, isGui3d, transforms, overrides, particle, renderTypes);
+                this.addLayer(renderTypes, RenderTypeGroup.EMPTY, quads);
+            }
+
+            private void addLayer(RenderTypeGroup renderTypes, RenderTypeGroup renderTypesFast, List<BakedQuad> quads)
+            {
+                var modelBuilder = IModelBuilder.of(isAmbientOcclusion, isSideLit, isGui3d, transforms, overrides, particle, renderTypes, renderTypesFast);
                 quads.forEach(modelBuilder::addUnculledFace);
                 children.add(modelBuilder.build());
             }
 
             private void flushQuads(RenderTypeGroup renderTypes)
             {
+                this.flushQuads(renderTypes, RenderTypeGroup.EMPTY);
+            }
+
+            private void flushQuads(RenderTypeGroup renderTypes, RenderTypeGroup renderTypesFast)
+            {
                 if (!Objects.equals(renderTypes, lastRenderTypes))
                 {
                     if (quads.size() > 0)
                     {
-                        addLayer(lastRenderTypes, quads);
+                        addLayer(lastRenderTypes, lastRenderTypesFast, quads);
                         quads.clear();
                     }
                     lastRenderTypes = renderTypes;
+                    lastRenderTypesFast = renderTypesFast;
                 }
             }
 
@@ -288,14 +290,24 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
 
             public Builder addQuads(RenderTypeGroup renderTypes, BakedQuad... quadsToAdd)
             {
-                flushQuads(renderTypes);
+                return this.addQuads(renderTypes, RenderTypeGroup.EMPTY, quadsToAdd);
+            }
+
+            public Builder addQuads(RenderTypeGroup renderTypes, RenderTypeGroup renderTypesFast, BakedQuad... quadsToAdd)
+            {
+                flushQuads(renderTypes, renderTypesFast);
                 Collections.addAll(quads, quadsToAdd);
                 return this;
             }
 
             public Builder addQuads(RenderTypeGroup renderTypes, Collection<BakedQuad> quadsToAdd)
             {
-                flushQuads(renderTypes);
+                return this.addQuads(renderTypes, RenderTypeGroup.EMPTY, quadsToAdd);
+            }
+
+            public Builder addQuads(RenderTypeGroup renderTypes, RenderTypeGroup renderTypesFast, Collection<BakedQuad> quadsToAdd)
+            {
+                flushQuads(renderTypes, renderTypesFast);
                 quads.addAll(quadsToAdd);
                 return this;
             }
@@ -304,7 +316,7 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel>
             {
                 if (quads.size() > 0)
                 {
-                    addLayer(lastRenderTypes, quads);
+                    addLayer(lastRenderTypes, lastRenderTypesFast, quads);
                 }
                 var childrenBuilder = ImmutableMap.<String, BakedModel>builder();
                 var itemPassesBuilder = ImmutableList.<BakedModel>builder();

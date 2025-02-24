@@ -7,9 +7,6 @@ package net.minecraftforge.client.extensions.common;
 
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -27,6 +24,8 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+
+import java.util.function.Consumer;
 
 /**
  * {@linkplain LogicalSide#CLIENT Client-only} extensions to {@link FluidType}.

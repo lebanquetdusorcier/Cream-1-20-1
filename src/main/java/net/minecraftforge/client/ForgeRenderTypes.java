@@ -6,14 +6,13 @@
 package net.minecraftforge.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.NonNullLazy;
@@ -204,9 +203,9 @@ public enum ForgeRenderTypes
         }
 
         private static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT = Util.memoize((p_173227_, p_173228_) -> {
-            RenderType.CompositeState rendertype$compositestate = RenderType.CompositeState.builder()
+            CompositeState rendertype$compositestate = CompositeState.builder()
                     .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(p_173227_, false, false))
+                    .setTextureState(new TextureStateShard(p_173227_, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setCullState(NO_CULL)
                     .setLightmapState(LIGHTMAP)
@@ -232,9 +231,9 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> LAYERED_ITEM_SOLID = Util.memoize(Internal::layeredItemSolid);
         private static RenderType layeredItemSolid(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RenderType.RENDERTYPE_ENTITY_SOLID_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
+                    .setTextureState(new TextureStateShard(locationIn, false, false))
                     .setTransparencyState(NO_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setOverlayState(OVERLAY)
@@ -244,9 +243,9 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> LAYERED_ITEM_CUTOUT = Util.memoize(Internal::layeredItemCutout);
         private static RenderType layeredItemCutout(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RenderType.RENDERTYPE_ENTITY_CUTOUT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
+                    .setTextureState(new TextureStateShard(locationIn, false, false))
                     .setTransparencyState(NO_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setOverlayState(OVERLAY)
@@ -256,9 +255,9 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> LAYERED_ITEM_CUTOUT_MIPPED = Util.memoize(Internal::layeredItemCutoutMipped);
         private static RenderType layeredItemCutoutMipped(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RenderType.RENDERTYPE_ENTITY_SMOOTH_CUTOUT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, true))
+                    .setTextureState(new TextureStateShard(locationIn, false, true))
                     .setTransparencyState(NO_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setOverlayState(OVERLAY)
@@ -268,9 +267,9 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> LAYERED_ITEM_TRANSLUCENT = Util.memoize(Internal::layeredItemTranslucent);
         private static RenderType layeredItemTranslucent(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, false))
+                    .setTextureState(new TextureStateShard(locationIn, false, false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setOverlayState(OVERLAY)
@@ -280,7 +279,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT = Util.memoize(Internal::getText);
         private static RenderType getText(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -291,7 +290,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT_INTENSITY = Util.memoize(Internal::getTextIntensity);
         private static RenderType getTextIntensity(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_INTENSITY_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -302,7 +301,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT_POLYGON_OFFSET = Util.memoize(Internal::getTextPolygonOffset);
         private static RenderType getTextPolygonOffset(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -314,7 +313,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT_INTENSITY_POLYGON_OFFSET = Util.memoize(Internal::getTextIntensityPolygonOffset);
         private static RenderType getTextIntensityPolygonOffset(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_INTENSITY_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -326,7 +325,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT_SEETHROUGH = Util.memoize(Internal::getTextSeeThrough);
         private static RenderType getTextSeeThrough(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_SEE_THROUGH_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -339,7 +338,7 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TEXT_INTENSITY_SEETHROUGH = Util.memoize(Internal::getTextIntensitySeeThrough);
         private static RenderType getTextIntensitySeeThrough(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TEXT_INTENSITY_SEE_THROUGH_SHADER)
                     .setTextureState(new CustomizableTextureState(locationIn, () -> ForgeRenderTypes.enableTextTextureLinearFiltering, () -> false))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
@@ -352,9 +351,9 @@ public enum ForgeRenderTypes
 
         public static Function<ResourceLocation, RenderType> TRANSLUCENT_PARTICLES_TARGET = Util.memoize(Internal::getTranslucentParticlesTarget);
         private static RenderType getTranslucentParticlesTarget(ResourceLocation locationIn) {
-            RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+            CompositeState rendertype$state = CompositeState.builder()
                     .setShaderState(RENDERTYPE_TRANSLUCENT_SHADER)
-                    .setTextureState(new RenderStateShard.TextureStateShard(locationIn, false, true))
+                    .setTextureState(new TextureStateShard(locationIn, false, true))
                     .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setLightmapState(LIGHTMAP)
                     .setOutputState(PARTICLES_TARGET)

@@ -14,7 +14,7 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 /**
  * An ArmPose that can be defined by the user.
- * Register one by creating a custom {@link net.minecraft.client.model.HumanoidModel.ArmPose}
+ * Register one by creating a custom {@link HumanoidModel.ArmPose}
  * and returning it in {@link IClientItemExtensions#getArmPose(LivingEntity, InteractionHand, ItemStack)}.
  */
 @FunctionalInterface

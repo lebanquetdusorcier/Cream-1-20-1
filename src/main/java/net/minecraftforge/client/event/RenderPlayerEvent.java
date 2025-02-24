@@ -20,8 +20,8 @@ import org.jetbrains.annotations.ApiStatus;
  * Fired when a player is being rendered.
  * See the two subclasses for listening for before and after rendering.
  *
- * @see RenderPlayerEvent.Pre
- * @see RenderPlayerEvent.Post
+ * @see Pre
+ * @see Post
  * @see PlayerRenderer
  */
 public abstract class RenderPlayerEvent extends PlayerEvent
@@ -91,7 +91,7 @@ public abstract class RenderPlayerEvent extends PlayerEvent
      *
      * <p>This event is {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.
      * If this event is cancelled, then the player will not be rendered and the corresponding
-     * {@link RenderPlayerEvent.Post} will not be fired.</p>
+     * {@link Post} will not be fired.</p>
      *
      * <p>This event is fired on the {@linkplain MinecraftForge#EVENT_BUS main Forge event bus},
      * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>
@@ -107,7 +107,7 @@ public abstract class RenderPlayerEvent extends PlayerEvent
     }
 
     /**
-     * Fired <b>after</b> the player is rendered, if the corresponding {@link RenderPlayerEvent.Pre} is not cancelled.
+     * Fired <b>after</b> the player is rendered, if the corresponding {@link Pre} is not cancelled.
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.</p>
      *

@@ -10,7 +10,7 @@ import com.mojang.math.Transformation;
 import org.joml.Vector3f;
 
 /**
- * Extension interface for {@link com.mojang.blaze3d.vertex.PoseStack}.
+ * Extension interface for {@link PoseStack}.
  */
 public interface IForgePoseStack
 {

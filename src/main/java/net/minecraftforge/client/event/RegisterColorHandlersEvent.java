@@ -27,8 +27,8 @@ import org.jetbrains.annotations.ApiStatus;
  * <p>These events are fired on the {@linkplain FMLJavaModLoadingContext#getModEventBus() mod-specific event bus},
  * only on the {@linkplain LogicalSide#CLIENT logical client}.</p>
  *
- * @see RegisterColorHandlersEvent.Block
- * @see RegisterColorHandlersEvent.Item
+ * @see Block
+ * @see Item
  */
 public abstract class RegisterColorHandlersEvent extends Event implements IModBusEvent
 {
@@ -81,7 +81,7 @@ public abstract class RegisterColorHandlersEvent extends Event implements IModBu
      * Fired for registering item color handlers.
      *
      * <p>The block colors should only be used for referencing or delegating item colors to their respective block
-     * colors. Use {@link RegisterColorHandlersEvent.Block} for registering your block color handlers.</p>
+     * colors. Use {@link Block} for registering your block color handlers.</p>
      *
      * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.</p>
      *

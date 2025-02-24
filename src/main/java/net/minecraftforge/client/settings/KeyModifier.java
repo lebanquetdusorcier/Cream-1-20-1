@@ -5,16 +5,15 @@
 
 package net.minecraftforge.client.settings;
 
-import java.util.List;
-import java.util.function.Supplier;
-
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import com.mojang.blaze3d.platform.InputConstants;
-
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public enum KeyModifier {
     CONTROL {

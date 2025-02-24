@@ -5,32 +5,21 @@
 
 package net.minecraftforge.client.model.generators;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.function.Predicate;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockStateProvider.ConfiguredModelList;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Builder for variant-type blockstates, i.e. non-multipart blockstates. Should
@@ -174,7 +163,7 @@ public class VariantBlockStateBuilder implements IGeneratedBlockState
         PartialBlockstate(Block owner, Map<Property<?>, Comparable<?>> setStates, @Nullable VariantBlockStateBuilder outerBuilder) {
             this.owner = owner;
             this.outerBuilder = outerBuilder;
-            for (Map.Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
+            for (Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
                 Property<?> prop = entry.getKey();
                 Comparable<?> value = entry.getValue();
                 Preconditions.checkArgument(owner.getStateDefinition().getProperties().contains(prop), "Property %s not found on block %s", entry, this.owner);
@@ -276,7 +265,7 @@ public class VariantBlockStateBuilder implements IGeneratedBlockState
             if (blockState.getBlock() != getOwner()) {
                 return false;
             }
-            for (Map.Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
+            for (Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
                 if (blockState.getValue(entry.getKey()) != entry.getValue()) {
                     return false;
                 }
@@ -287,7 +276,7 @@ public class VariantBlockStateBuilder implements IGeneratedBlockState
         @Override
         public String toString() {
             StringBuilder ret = new StringBuilder();
-            for (Map.Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
+            for (Entry<Property<?>, Comparable<?>> entry : setStates.entrySet()) {
                 if (ret.length() > 0) {
                     ret.append(',');
                 }

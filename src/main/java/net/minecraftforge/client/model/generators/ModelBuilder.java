@@ -5,29 +5,14 @@
 
 package net.minecraftforge.client.model.generators;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.JsonOps;
-
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.block.model.BlockModel.GuiLight;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockElementRotation;
-import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +25,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * General purpose model builder, contains all the commonalities between item
@@ -60,6 +51,7 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
     protected final ExistingFileHelper existingFileHelper;
 
     protected String renderType = null;
+    protected String renderTypeFast = null;
     protected boolean ambientOcclusion = true;
     protected GuiLight guiLight = null;
 
@@ -149,12 +141,17 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
     }
 
     /**
-     * Set the render type for this model.
+     * Set the render type for this model. Any render types to be used must be registered via
+     * {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent RegisterNamedRenderTypesEvent}.
+     * <p>
+     * Consider using {@linkplain #renderType(String, String)} if you need to set a render type for
+     * {@linkplain net.minecraft.client.GraphicsStatus#FAST fast graphics}.
      *
-     * @param renderType the render type. Must be registered via
-     *                   {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent}
+     * @param renderType the render type
      * @return this builder
-     * @throws NullPointerException  if {@code renderType} is {@code null}
+     *
+     * @throws NullPointerException if {@code renderType} is {@code null}
+     * @see #renderType(String, String)
      */
     public T renderType(String renderType) {
         Preconditions.checkNotNull(renderType, "Render type must not be null");
@@ -162,16 +159,56 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
     }
 
     /**
-     * Set the render type for this model.
+     * Set the render types for this model. Any render types to be used must be registered via
+     * {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent RegisterNamedRenderTypesEvent}.
      *
-     * @param renderType the render type. Must be registered via
-     *                   {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent}
+     * @param renderType     the render type for {@linkplain net.minecraft.client.GraphicsStatus#FANCY fancy graphics}
+     * @param renderTypeFast the render type for {@linkplain net.minecraft.client.GraphicsStatus#FAST fast graphics}
      * @return this builder
-     * @throws NullPointerException  if {@code renderType} is {@code null}
+     *
+     * @throws NullPointerException if {@code renderType} is {@code null}
+     */
+    public T renderType(String renderType, String renderTypeFast) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        Preconditions.checkNotNull(renderTypeFast, "Render type for fast graphics must not be null");
+        return renderType(new ResourceLocation(renderType), new ResourceLocation(renderTypeFast));
+    }
+
+    /**
+     * Set the render type for this model. Any render types to be used must be registered via
+     * {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent RegisterNamedRenderTypesEvent}.
+     * <p>
+     * Consider using {@linkplain #renderType(ResourceLocation, ResourceLocation)} if you need to set a render type for
+     * {@linkplain net.minecraft.client.GraphicsStatus#FAST fast graphics}.
+     *
+     * @param renderType the render type
+     * @return this builder
+     *
+     * @throws NullPointerException if {@code renderType} is {@code null}
+     * @see #renderType(ResourceLocation, ResourceLocation)
      */
     public T renderType(ResourceLocation renderType) {
         Preconditions.checkNotNull(renderType, "Render type must not be null");
         this.renderType = renderType.toString();
+        this.renderTypeFast = null;
+        return self();
+    }
+
+    /**
+     * Set the render types for this model. Any render types to be used must be registered via
+     * {@link net.minecraftforge.client.event.RegisterNamedRenderTypesEvent RegisterNamedRenderTypesEvent}.
+     *
+     * @param renderType     the render type for {@linkplain net.minecraft.client.GraphicsStatus#FANCY fancy graphics}
+     * @param renderTypeFast the render type for {@linkplain net.minecraft.client.GraphicsStatus#FAST fast graphics}
+     * @return this builder
+     *
+     * @throws NullPointerException if {@code renderType} is {@code null}
+     */
+    public T renderType(ResourceLocation renderType, ResourceLocation renderTypeFast) {
+        Preconditions.checkNotNull(renderType, "Render type must not be null");
+        Preconditions.checkNotNull(renderTypeFast, "Render type for fast graphics must not be null");
+        this.renderType = renderType.toString();
+        this.renderTypeFast = renderTypeFast.toString();
         return self();
     }
 
@@ -254,6 +291,10 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
 
         if (this.renderType != null) {
             root.addProperty("render_type", this.renderType);
+        }
+
+        if (this.renderTypeFast != null) {
+            root.addProperty("render_type_fast", this.renderTypeFast);
         }
 
         Map<ItemDisplayContext, ItemTransform> transforms = this.transforms.build();
@@ -574,7 +615,7 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
 
         BlockElement build() {
             Map<Direction, BlockElementFace> faces = this.faces.entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().build(), (k1, k2) -> { throw new IllegalArgumentException(); }, LinkedHashMap::new));
+                    .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().build(), (k1, k2) -> { throw new IllegalArgumentException(); }, LinkedHashMap::new));
             return new BlockElement(from, to, faces, rotation == null ? null : rotation.build(), shade, new ForgeFaceData(this.color, this.blockLight, this.skyLight, this.hasAmbientOcclusion, this.calculateNormals));
         }
 
@@ -774,7 +815,7 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
 
         Map<ItemDisplayContext, ItemTransform> build() {
             return this.transforms.entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().build(), (k1, k2) -> { throw new IllegalArgumentException(); }, LinkedHashMap::new));
+                    .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().build(), (k1, k2) -> { throw new IllegalArgumentException(); }, LinkedHashMap::new));
         }
 
         public T end() { return self(); }

@@ -16,7 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Allows users to register custom {@link net.minecraft.client.KeyMapping key mappings}.
+ * Allows users to register custom {@link KeyMapping key mappings}.
  *
  * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.
  *

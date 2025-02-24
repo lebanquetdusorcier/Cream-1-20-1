@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Allows users to register custom {@link net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent}
- * factories for their {@link net.minecraft.world.inventory.tooltip.TooltipComponent} types.
+ * Allows users to register custom {@link ClientTooltipComponent}
+ * factories for their {@link TooltipComponent} types.
  *
  * <p>This event is not {@linkplain Cancelable cancellable}, and does not {@linkplain HasResult have a result}.
  *

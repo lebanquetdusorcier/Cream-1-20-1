@@ -19,7 +19,7 @@ import org.lwjgl.glfw.GLFW;
  * Fired when an input is detected from the user's input devices.
  * See the various subclasses to listen for specific devices and inputs.
  *
- * @see InputEvent.MouseButton
+ * @see MouseButton
  * @see MouseScrollingEvent
  * @see Key
  * @see InteractionKeyMappingTriggered

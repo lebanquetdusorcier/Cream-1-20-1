@@ -13,12 +13,10 @@ import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.util.Set;
-
 /**
  * Fired after a texture atlas is stitched together.
  *
- * @see TextureStitchEvent.Post
+ * @see Post
  * @see TextureAtlas
  */
 public class TextureStitchEvent extends Event implements IModBusEvent

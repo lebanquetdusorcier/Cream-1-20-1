@@ -5,20 +5,7 @@
 
 package net.minecraftforge.client.gui;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import net.minecraftforge.client.gui.widget.ScrollPanel;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.vertex.Tesselator;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -27,20 +14,26 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineLabel;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.*;
 import net.minecraft.network.chat.HoverEvent.Action;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraftforge.client.gui.widget.ScrollPanel;
 import net.minecraftforge.common.ForgeI18n;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.ConnectionData.ModMismatchData;
 import net.minecraftforge.network.NetworkRegistry;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ModMismatchDisconnectedScreen extends Screen
 {
@@ -150,7 +143,7 @@ public class ModMismatchDisconnectedScreen extends Screen
                 //This table section contains the mod name and both mod versions of each mod that has a mismatching client and server version
                 rawTable.add(Pair.of(Component.literal(ForgeI18n.parseMessage("fml.modmismatchscreen.table.modname")).withStyle(ChatFormatting.UNDERLINE), Pair.of(ForgeI18n.parseMessage(mismatchedDataFromServer ? "fml.modmismatchscreen.table.youhave" : "fml.modmismatchscreen.table.serverhas"), ForgeI18n.parseMessage(mismatchedDataFromServer ? "fml.modmismatchscreen.table.serverhas" : "fml.modmismatchscreen.table.youhave"))));
                 int i = 0;
-                for (Map.Entry<ResourceLocation,  String> modData : mismatchedModData.entrySet()) {
+                for (Entry<ResourceLocation,  String> modData : mismatchedModData.entrySet()) {
                     rawTable.add(Pair.of(toModNameComponent(modData.getKey(), presentModData.get(modData.getKey()).getLeft(), i), Pair.of(presentModData.getOrDefault(modData.getKey(), Pair.of("", "")).getRight(), modData.getValue())));
                     if (++i >= 10) {
                         //If too many mismatched mod entries are present, append a line referencing how to see the full list and stop rendering any more entries

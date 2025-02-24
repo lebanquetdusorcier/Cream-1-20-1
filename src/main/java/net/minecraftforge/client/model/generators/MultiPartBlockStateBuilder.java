@@ -5,21 +5,20 @@
 
 package net.minecraftforge.client.model.generators;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.Property;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
 
 public final class MultiPartBlockStateBuilder implements IGeneratedBlockState
 {
@@ -202,11 +201,11 @@ public final class MultiPartBlockStateBuilder implements IGeneratedBlockState
              * 
              * @throws IllegalStateException If this is a nested condition group
              */
-            public MultiPartBlockStateBuilder.PartBuilder end()
+            public PartBuilder end()
             {
                 if (this.parent != null)
                     throw new IllegalStateException("This is a nested condition group, use endNestedGroup() instead");
-                return MultiPartBlockStateBuilder.PartBuilder.this;
+                return PartBuilder.this;
             }
 
             /**
