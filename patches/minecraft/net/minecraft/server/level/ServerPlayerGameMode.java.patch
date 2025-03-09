@@ -263,6 +263,13 @@
 +      org.bukkit.event.block.BlockBreakEvent event = null;
 +
 +      if (this.player instanceof ServerPlayer) {
++         //Ketting start - forge event pre-cancel
++         int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(level, gameModeForPlayer, player, p_9281_);
++
++         if (exp == -1)
++            return java.util.Optional.empty();
++         //Ketting end
++
 +         // Sword + Creative mode pre-cancel
 +         boolean isSwordNoBreak = !this.player.getMainHandItem().getItem().canAttackBlock(blockState, this.level, p_9281_, this.player);
 +
@@ -275,14 +282,7 @@
 +
 +         event = new org.bukkit.event.block.BlockBreakEvent(bblock, this.player.getBukkitEntity());
 +
-+         //Ketting start - fire forge event before bukkit
-+         int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(level, gameModeForPlayer, player, p_9281_);
-+
-+         if (exp == -1)
-+            return java.util.Optional.empty();
-+
-+         event.setExpToDrop(exp); //override bukkit handling as the exact same thing happens in forge
-+         //Ketting end
++         event.setExpToDrop(exp); //Ketting - override bukkit handling as the exact same thing happens in forge
 +
 +         // Sword + Creative mode pre-cancel
 +         event.setCancelled(isSwordNoBreak);
