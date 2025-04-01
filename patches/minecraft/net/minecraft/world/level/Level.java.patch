@@ -333,7 +333,7 @@
        if (this.isOutsideBuildHeight(p_46732_)) {
           return Blocks.VOID_AIR.defaultBlockState();
        } else {
-@@ -398,38 +_,86 @@
+@@ -398,38 +_,87 @@
        (this.tickingBlockEntities ? this.pendingBlockEntityTickers : this.blockEntityTickers).add(p_151526_);
     }
  
@@ -345,6 +345,7 @@
 +      }
 +   }
 +
++   private int tickBlockEntities$tilesThisCycle = 0; //Ketting - mixin compat
     protected void tickBlockEntities() {
        ProfilerFiller profilerfiller = this.getProfiler();
        profilerfiller.push("blockEntities");
@@ -374,16 +375,16 @@
 +      // Spigot start
 +      Iterator<TickingBlockEntity> iterator = this.blockEntityTickers.iterator(); //Ketting - keep this here for mixin compat
 +
-+      int tilesThisCycle = 0;
++      tickBlockEntities$tilesThisCycle = 0;
 +      for (tileLimiter.initTick();
-+           tilesThisCycle < blockEntityTickers.size() && (tilesThisCycle % 10 != 0 || tileLimiter.shouldContinue());
-+           tileTickPosition++, tilesThisCycle++) {
++           tickBlockEntities$tilesThisCycle < blockEntityTickers.size() && (tickBlockEntities$tilesThisCycle % 10 != 0 || tileLimiter.shouldContinue());
++           tileTickPosition++, tickBlockEntities$tilesThisCycle++) {
 +         tileTickPosition = (tileTickPosition < blockEntityTickers.size()) ? tileTickPosition : 0;
 +         TickingBlockEntity tickingblockentity = this.blockEntityTickers.get(tileTickPosition);
 +         // Spigot start
 +         if (tickingblockentity == null) {
 +            getCraftServer().getLogger().severe("Spigot has detected a null entity and has removed it, preventing a crash");
-+            tilesThisCycle--;
++            tickBlockEntities$tilesThisCycle--;
 +            this.blockEntityTickers.remove(tileTickPosition--);
 +            continue;
 +         }
@@ -392,7 +393,7 @@
           if (tickingblockentity.isRemoved()) {
 -            iterator.remove();
 +            // Spigot start
-+            tilesThisCycle--;
++            tickBlockEntities$tilesThisCycle--;
 +            this.blockEntityTickers.remove(tileTickPosition--);
 +            // Spigot end
           } else if (this.shouldTickBlocksAt(tickingblockentity.getPos())) {
