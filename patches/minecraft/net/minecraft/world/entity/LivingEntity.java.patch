@@ -921,7 +921,7 @@
              this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
           }
  
-@@ -1539,7 +_,11 @@
+@@ -1539,15 +_,21 @@
  
     protected float getDamageAfterArmorAbsorb(DamageSource p_21162_, float p_21163_) {
        if (!p_21162_.is(DamageTypeTags.BYPASSES_ARMOR)) {
@@ -933,29 +933,42 @@
           p_21163_ = CombatRules.getDamageAfterAbsorb(p_21163_, (float)this.getArmorValue(), (float)this.getAttributeValue(Attributes.ARMOR_TOUGHNESS));
        }
  
-@@ -1550,7 +_,8 @@
+       return p_21163_;
+    }
+ 
++   private java.util.concurrent.atomic.AtomicBoolean getDamageAfterMagicAbsorb$handleResistance = new java.util.concurrent.atomic.AtomicBoolean(false);
+    protected float getDamageAfterMagicAbsorb(DamageSource p_21193_, float p_21194_) {
        if (p_21193_.is(DamageTypeTags.BYPASSES_EFFECTS)) {
++         if (getDamageAfterMagicAbsorb$handleResistance.get()) return -0.0F; //Ketting - fallback for when the entity bypassed effects
           return p_21194_;
        } else {
--         if (this.hasEffect(MobEffects.DAMAGE_RESISTANCE) && !p_21193_.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
-+         // CraftBukkit - Moved to damageEntity0(DamageSource, float)
-+         if (false && this.hasEffect(MobEffects.DAMAGE_RESISTANCE) && !p_21193_.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
-             int i = (this.getEffect(MobEffects.DAMAGE_RESISTANCE).getAmplifier() + 1) * 5;
-             int j = 25 - i;
-             float f = p_21194_ * (float)j;
-@@ -1559,9 +_,9 @@
+          if (this.hasEffect(MobEffects.DAMAGE_RESISTANCE) && !p_21193_.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
+@@ -1557,14 +_,19 @@
+             float f1 = p_21194_;
+             p_21194_ = Math.max(f / 25.0F, 0.0F);
              float f2 = f1 - p_21194_;
-             if (f2 > 0.0F && f2 < 3.4028235E37F) {
-                if (this instanceof ServerPlayer) {
+-            if (f2 > 0.0F && f2 < 3.4028235E37F) {
+-               if (this instanceof ServerPlayer) {
 -                  ((ServerPlayer)this).awardStat(Stats.DAMAGE_RESISTED, Math.round(f2 * 10.0F));
-+                  ((ServerPlayer)this).awardStat(Stats.CUSTOM.get(Stats.DAMAGE_RESISTED), Math.round(f2 * 10.0F));
-                } else if (p_21193_.getEntity() instanceof ServerPlayer) {
+-               } else if (p_21193_.getEntity() instanceof ServerPlayer) {
 -                  ((ServerPlayer)p_21193_.getEntity()).awardStat(Stats.DAMAGE_DEALT_RESISTED, Math.round(f2 * 10.0F));
-+                  ((ServerPlayer)p_21193_.getEntity()).awardStat(Stats.CUSTOM.get(Stats.DAMAGE_DEALT_RESISTED), Math.round(f2 * 10.0F));
++            if (getDamageAfterMagicAbsorb$handleResistance.get()) return -f2; //Ketting - handled in damageEntity0
++            if (Boolean.valueOf(false)) { //Ketting - handled in damageEntity0
++               if (f2 > 0.0F && f2 < 3.4028235E37F) {
++                  if (this instanceof ServerPlayer) {
++                     ((ServerPlayer)this).awardStat(Stats.CUSTOM.get(Stats.DAMAGE_RESISTED), Math.round(f2 * 10.0F));
++                  } else if (p_21193_.getEntity() instanceof ServerPlayer) {
++                     ((ServerPlayer)p_21193_.getEntity()).awardStat(Stats.CUSTOM.get(Stats.DAMAGE_DEALT_RESISTED), Math.round(f2 * 10.0F));
++                  }
                 }
              }
           }
-@@ -1581,8 +_,204 @@
++
++         if (getDamageAfterMagicAbsorb$handleResistance.get()) return -0.0F; //Ketting - fallback for when the entity did not have the resistance effect
+ 
+          if (p_21194_ <= 0.0F) {
+             return 0.0F;
+@@ -1581,8 +_,213 @@
        }
     }
  
@@ -1006,6 +1019,8 @@
 +         com.google.common.base.Function<Double, Double> resistance = new com.google.common.base.Function<Double, Double>() {
 +            @Override
 +            public Double apply(Double f) {
++               //Ketting start - let original function handle resistance
++               /*
 +               if (!damagesource.is(DamageTypeTags.BYPASSES_EFFECTS) && LivingEntity.this.hasEffect(MobEffects.DAMAGE_RESISTANCE) && !damagesource.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
 +                  int i = (LivingEntity.this.getEffect(MobEffects.DAMAGE_RESISTANCE).getAmplifier() + 1) * 5;
 +                  int j = 25 - i;
@@ -1013,6 +1028,13 @@
 +                  return -(f - (f1 / 25.0F));
 +               }
 +               return -0.0;
++               */
++               LivingEntity.this.getDamageAfterMagicAbsorb$handleResistance.set(true);
++               double ret = LivingEntity.this.getDamageAfterMagicAbsorb(damagesource, f.floatValue());
++               LivingEntity.this.getDamageAfterMagicAbsorb$handleResistance.set(false);
++
++               return ret;
++               //Ketting end
 +            }
 +         };
 +         float resistanceModifier = resistance.apply((double) f).floatValue();
