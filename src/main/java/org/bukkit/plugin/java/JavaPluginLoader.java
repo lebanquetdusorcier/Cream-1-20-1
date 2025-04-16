@@ -55,6 +55,7 @@ public final class JavaPluginLoader implements PluginLoader {
     private final List<PluginClassLoader> loaders = new CopyOnWriteArrayList<PluginClassLoader>();
     private final LibraryLoader libraryLoader;
     public static final CustomTimingsHandler pluginParentTimer = new CustomTimingsHandler("** Plugins"); // Spigot
+    private static final java.net.URLClassLoader parent = new java.net.URLClassLoader(new java.net.URL[0], JavaPluginLoader.class.getClassLoader()); //Ketting
 
     /**
      * This class was not meant to be constructed explicitly
@@ -142,7 +143,7 @@ public final class JavaPluginLoader implements PluginLoader {
 
         final PluginClassLoader loader;
         try {
-            loader = new PluginClassLoader(this, getClass().getClassLoader(), description, dataFolder, file, (libraryLoader != null) ? libraryLoader.createLoader(description) : null);
+            loader = new PluginClassLoader(this, parent, description, dataFolder, file, (libraryLoader != null) ? libraryLoader.createLoader(description) : null); //Ketting - transform to URLClassLoader
         } catch (InvalidPluginException ex) {
             throw ex;
         } catch (Throwable ex) {
