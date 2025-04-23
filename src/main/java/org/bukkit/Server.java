@@ -22,10 +22,7 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SpawnCategory;
@@ -872,6 +869,15 @@ public interface Server extends PluginMessageRecipient {
      */
     @NotNull
     public Map<String, String[]> getCommandAliases();
+
+    /**
+     * Get the command map
+     * NOTE: Cream fix
+     *
+     * @return Command Mpa
+     */
+    @NotNull
+    public CommandMap getCommandMap ();
 
     /**
      * Gets the radius, in blocks, around each worlds spawn point to protect.

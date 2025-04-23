@@ -22,10 +22,7 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
-import org.bukkit.command.CommandException;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SpawnCategory;
@@ -1026,6 +1023,18 @@ public final class Bukkit {
     @NotNull
     public static Map<String, String[]> getCommandAliases() {
         return server.getCommandAliases();
+    }
+
+    /**
+     * Get the command map
+     *
+     * NOTE: Cream patch
+     *
+     * @return command map
+     */
+    @NotNull
+    public static CommandMap getCommandMap () {
+        return getServer().getCommandMap();
     }
 
     /**
