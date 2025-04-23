@@ -42,6 +42,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -92,30 +93,7 @@ import org.bukkit.craftbukkit.v1_20_R1.potion.CraftPotionUtil;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftMagicNumbers;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftVector;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.AreaEffectCloud;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.Explosive;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Fish;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.Pig;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Piglin;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Raider;
-import org.bukkit.entity.Spellcaster;
-import org.bukkit.entity.Strider;
-import org.bukkit.entity.ThrownExpBottle;
-import org.bukkit.entity.Vehicle;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -199,27 +177,8 @@ import org.bukkit.event.inventory.PrepareGrindstoneEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerBedEnterEvent.BedEnterResult;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketEntityEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerBucketFishEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
-import org.bukkit.event.player.PlayerExpCooldownChangeEvent;
-import org.bukkit.event.player.PlayerHarvestBlockEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemBreakEvent;
-import org.bukkit.event.player.PlayerItemMendEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.event.player.PlayerRecipeBookClickEvent;
-import org.bukkit.event.player.PlayerRecipeDiscoverEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.event.player.PlayerSignOpenEvent;
-import org.bukkit.event.player.PlayerStatisticIncrementEvent;
-import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.event.raid.RaidFinishEvent;
 import org.bukkit.event.raid.RaidSpawnWaveEvent;
 import org.bukkit.event.raid.RaidStopEvent;
@@ -349,6 +308,17 @@ public class CraftEventFactory {
         } else {
             event = new PlayerBucketEntityEvent(player, fish.getBukkitEntity(), CraftItemStack.asBukkitCopy(originalBucket), CraftItemStack.asBukkitCopy(entityBucket), hand);
         }
+        Bukkit.getPluginManager().callEvent(event);
+        return event;
+    }
+
+    /**
+     * Player Fish Event
+     * NOTE: Cream patch
+     */
+    public static PlayerFishEvent callPlayerFishEvent (Level level, FishingHook fishingHook, org.bukkit.entity.Entity hookedEntity, PlayerFishEvent.State state) {
+        Player player = (Player) fishingHook.getPlayerOwner().getBukkitEntity();
+        PlayerFishEvent event = new PlayerFishEvent(player, hookedEntity, (FishHook) fishingHook.getBukkitEntity(), state);
         Bukkit.getPluginManager().callEvent(event);
         return event;
     }
