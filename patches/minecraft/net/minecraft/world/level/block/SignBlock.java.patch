@@ -5,6 +5,7 @@
                 return InteractionResult.SUCCESS;
              } else if (!this.otherPlayerIsEditingSign(p_56281_, signblockentity) && p_56281_.mayBuild() && this.hasEditableText(p_56281_, signblockentity, flag2)) {
 +               // ketting start
++               ketting$openTextEdit$cause.set(org.bukkit.event.player.PlayerSignOpenEvent.Cause.INTERACT); // CraftBukkit
                 this.openTextEdit(p_56281_, signblockentity, flag2);
 +               // ketting end
                 return InteractionResult.SUCCESS;
