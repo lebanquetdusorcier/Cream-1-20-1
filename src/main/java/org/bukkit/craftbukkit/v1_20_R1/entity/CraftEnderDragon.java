@@ -2,8 +2,12 @@ package org.bukkit.craftbukkit.v1_20_R1.entity;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import io.izzel.arclight.api.EnumHelper;
 import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.boss.enderdragon.phases.EnderDragonPhase;
 import org.bukkit.boss.BossBar;
@@ -12,6 +16,7 @@ import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.boss.CraftDragonBattle;
 import org.bukkit.entity.ComplexEntityPart;
 import org.bukkit.entity.EnderDragon;
+import org.kettingpowered.ketting.core.Ketting;
 
 public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnemy {
 
@@ -41,6 +46,7 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
 
     @Override
     public Phase getPhase() {
+        ketting$checkDragonPhase();
         return Phase.values()[getHandle().getEntityData().get(net.minecraft.world.entity.boss.enderdragon.EnderDragon.DATA_PHASE)];
     }
 
@@ -50,7 +56,28 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
     }
 
     public static Phase getBukkitPhase(EnderDragonPhase phase) {
+        ketting$checkDragonPhase();
         return Phase.values()[phase.getId()];
+    }
+
+
+    // Yoink from Arclight's fix
+    private static void ketting$checkDragonPhase() {
+        int bukkitPhaseCount = Phase.values().length;
+        int forgePhaseCount = EnderDragonPhase.getCount();
+
+        if (bukkitPhaseCount >= forgePhaseCount) return;
+
+        List<Phase> newPhases = new ArrayList<>(forgePhaseCount - bukkitPhaseCount);
+
+        for (int id = bukkitPhaseCount; id < forgePhaseCount; id++) {
+            String phaseName = "MOD_PHASE_" + id;
+            Phase newPhase = EnumHelper.makeEnum(Phase.class, phaseName, id, List.of(), List.of());
+            newPhases.add(newPhase);
+            Ketting.LOGGER.debug("Register New Ender Dragon Phase: {}", phaseName);
+        }
+
+        EnumHelper.addEnums(Phase.class, newPhases);
     }
 
     public static EnderDragonPhase getMinecraftPhase(Phase phase) {
