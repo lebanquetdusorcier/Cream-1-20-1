@@ -1023,11 +1023,11 @@ tasks.register('kettingJar', Jar) {
         attributes 'ForgeVersion': FORGE_VERSION
         attributes 'KettingVersion': KETTING_VERSION
         attributes([
-                "Specification-Title": "Kettingpowered",
-                "Specification-Vendor": "Kettingpowered",
-                "Implementation-Title": "Ketting",
-                "Implementation-Version": "dev-env",
-                "Implementation-Vendor": "Kettingpowered",
+                "Specification-Title": "Cream",
+                "Specification-Vendor": "Cream",
+                "Implementation-Title": "Cream",
+                "Implementation-Version": "lbds-unlaunchered",
+                "Implementation-Vendor": "Cream",
         ], "org/kettingpowered/launcher/")
     }
     mustRunAfter ':setup'
