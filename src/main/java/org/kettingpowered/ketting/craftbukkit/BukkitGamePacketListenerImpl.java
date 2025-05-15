@@ -63,6 +63,11 @@ public class BukkitGamePacketListenerImpl implements net.minecraft.network.proto
                     }
                     listener.getCraftPlayer().addChannel(channel);
                 }
+                // Cream: Add server messaging channels
+                for (String channel : listener.cserver.getMessenger().getOutgoingChannels())
+                    listener.getCraftPlayer().addChannel(channel);
+                for (String channel : listener.cserver.getMessenger().getIncomingChannels())
+                    listener.getCraftPlayer().addChannel(channel);
             } catch (Exception ex) {
                 PacketUtils.LOGGER.error("Couldn\'t register custom payload", ex);
                 listener.disconnect("Invalid payload REGISTER!");
@@ -73,6 +78,11 @@ public class BukkitGamePacketListenerImpl implements net.minecraft.network.proto
                 for (String channel : channels.split("\0")) {
                     listener.getCraftPlayer().removeChannel(channel);
                 }
+                // Cream: Remove server messaging channels
+                for (String channel : listener.cserver.getMessenger().getOutgoingChannels())
+                    listener.getCraftPlayer().removeChannel(channel);
+                for (String channel : listener.cserver.getMessenger().getIncomingChannels())
+                    listener.getCraftPlayer().removeChannel(channel);
             } catch (Exception ex) {
                 PacketUtils.LOGGER.error("Couldn\'t unregister custom payload", ex);
                 listener.disconnect("Invalid payload UNREGISTER!");
