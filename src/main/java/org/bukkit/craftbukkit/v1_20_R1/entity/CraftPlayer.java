@@ -1626,7 +1626,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
         if (getHandle().connection == null) return;
 
         channel = StandardMessenger.validateAndCorrectChannel(channel);
-        if (channels.contains(channel)) {
+        if (getServer().getMessenger().getOutgoingChannels().contains(channel) || channels.contains(channel)) {
             ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new ResourceLocation(channel), new FriendlyByteBuf(Unpooled.wrappedBuffer(message)));
             getHandle().connection.send(packet);
         }
