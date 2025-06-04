@@ -874,7 +874,7 @@
           ServerLevel.this.getChunkSource().addEntity(p_143371_);
           if (p_143371_ instanceof ServerPlayer serverplayer) {
              ServerLevel.this.players.add(serverplayer);
-@@ -1475,16 +_,48 @@
+@@ -1475,16 +_,53 @@
              ServerLevel.this.navigatingMobs.add(mob);
           }
  
@@ -916,10 +916,15 @@
 +         }
 +         // Spigot end
 +         // Spigot Start
-+         if (p_143375_.getBukkitEntity() instanceof org.bukkit.inventory.InventoryHolder && (!(p_143375_ instanceof ServerPlayer) || p_143375_.getRemovalReason() != Entity.RemovalReason.KILLED)) { // SPIGOT-6876: closeInventory clears death message
-+            for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((org.bukkit.inventory.InventoryHolder) p_143375_.getBukkitEntity()).getInventory().getViewers())) {
-+               h.closeInventory();
++         try {
++            if (p_143375_.getBukkitEntity() instanceof org.bukkit.inventory.InventoryHolder && (!(p_143375_ instanceof ServerPlayer) || p_143375_.getRemovalReason() != Entity.RemovalReason.KILLED)) { // SPIGOT-6876: closeInventory clears death message
++               for (org.bukkit.entity.HumanEntity h : Lists.newArrayList(((org.bukkit.inventory.InventoryHolder) p_143375_.getBukkitEntity()).getInventory().getViewers())) {
++                  h.closeInventory();
++               }
 +            }
++         } catch (Exception e) {
++            System.out.println("[EXCP SERVERLEVEL] " + p_143375_.getBukkitEntity().getType().name());
++            e.printStackTrace();
 +         }
 +         // Spigot End
           ServerLevel.this.getChunkSource().removeEntity(p_143375_);
