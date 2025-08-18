@@ -10,10 +10,12 @@ println("Version: $version")
 
 repositories {
     //Ketting start
-    maven { url = 'https://reposilite.c0d3m4513r.com/Magma/' }
+    maven { url = 'https://repo.lebanquetdusorcier.fr/Magma/' }
     maven { url = 'https://repo.kettingpowered.org/Magma/' }
-    maven { url = 'https://reposilite.c0d3m4513r.com/Ketting/' }
+    maven { url = 'https://reposilite.c0d3m4513r.com/Magma/' }
+    maven { url = 'https://repo.lebanquetdusorcier.fr/Ketting/' }
     maven { url = 'https://repo.kettingpowered.org/Ketting/' }
+    maven { url = 'https://reposilite.c0d3m4513r.com/Ketting/' }
     //Everything below is not required, but kept for redundancy
     //Ketting end
     mavenCentral()
