@@ -3,6 +3,7 @@ import org.gradle.internal.os.OperatingSystem
 pluginManagement {
     repositories {
         maven { url = 'https://reposilite.c0d3m4513r.com/Magma/' }
+        maven { url = 'https://repo.kettingpowered.org/Magma/' }
         //Everything below is not required, but kept for redundancy
         gradlePluginPortal()
         maven { url = 'https://maven.minecraftforge.net/' }
@@ -72,9 +73,9 @@ dependencyResolutionManagement {
             bundle('jarjar', ['jarjar-fs', 'jarjar-selector', 'jarjar-meta'])
 
             //Ketting start - Ketting libs
-            library('kettingcore',     'org.kettingpowered', 'kettingcore').version('1.5.3')
+            library('kettingcore',     'org.kettingpowered', 'kettingcore').version('1.5.5')
             library('kettingcommon',   'org.kettingpowered', 'kettingcommon').version('2.4.1')
-            library('kettinglauncher', 'org.kettingpowered', 'kettinglauncher').version('1.5.0')
+            library('kettinglauncher', 'org.kettingpowered', 'kettinglauncher').version('1.6.0')
             library('terminalcolors',  'org.kettingpowered', 'terminal-colors').version('1.0.2')
             library('mavenmodelcombined', 'org.kettingpowered', 'maven-model-combined').version('1.0.0')
 
