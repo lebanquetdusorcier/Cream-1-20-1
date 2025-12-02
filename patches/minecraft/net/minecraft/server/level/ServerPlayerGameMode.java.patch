@@ -49,7 +49,7 @@
           }
        }
  
-@@ -124,7 +_,11 @@
+@@ -124,7 +_,13 @@
     }
  
     public void handleBlockBreakAction(BlockPos p_215120_, ServerboundPlayerActionPacket.Action p_215121_, Direction p_215122_, int p_215123_, int p_215124_) {
@@ -58,7 +58,9 @@
 +      if (forgeEvent.isCanceled() || (!this.isCreative() && forgeEvent.getResult() == net.minecraftforge.eventbus.api.Event.Result.DENY)) {
 +         return;
 +      }
-+      if (!this.player.canReachRaw(p_215120_, 1.5)) { // Vanilla uses ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE which is 6*6, default Block reach is 4.5 so add 1.5 padding
++      boolean canReachUnmodded = this.testPlayerCanReach(p_215120_);
++      boolean canReachModded = this.player.canReach(p_215120_, 1.5); // Vanilla uses ServerGamePacketListenerImpl.MAX_INTERACTION_DISTANCE which is 6*6, default Block reach is 4.5, so add 1.5 padding
++      if (canReachUnmodded == canReachModded ? !this.player.canReachRaw(p_215120_, 1.5) : !canReachModded) {
           this.debugLogging(p_215120_, false, p_215124_, "too far");
        } else if (p_215120_.getY() >= p_215123_) {
           this.player.connection.send(new ClientboundBlockUpdatePacket(p_215120_, this.level.getBlockState(p_215120_)));
@@ -155,7 +157,7 @@
              if (!blockstate.isAir() && f >= 1.0F) {
                 this.destroyAndAck(p_215120_, p_215124_, "insta mine");
              } else {
-@@ -197,13 +_,15 @@
+@@ -197,16 +_,23 @@
           } else if (p_215121_ == ServerboundPlayerActionPacket.Action.ABORT_DESTROY_BLOCK) {
              this.isDestroyingBlock = false;
              if (!Objects.equals(this.destroyPos, p_215120_)) {
@@ -172,6 +174,14 @@
           }
  
        }
++   }
++
++   private boolean testPlayerCanReach(BlockPos pos) {
++      // don't mixin into this
++      return this.player.canReach(pos, 1.5);
+    }
+ 
+    public void destroyAndAck(BlockPos p_215117_, int p_215118_, String p_215119_) {
 @@ -219,40 +_,136 @@
  
     }
