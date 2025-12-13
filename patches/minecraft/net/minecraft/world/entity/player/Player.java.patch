@@ -470,7 +470,7 @@
                    }
                 }
  
-@@ -1121,10 +_,15 @@
+@@ -1121,10 +_,17 @@
                    if (flag3) {
                       float f3 = 1.0F + EnchantmentHelper.getSweepingDamageRatio(this) * f;
  
@@ -480,6 +480,8 @@
 -                           livingentity.hurt(this.damageSources().playerAttack(this), f3);
 +                     for(LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getItemInHand(InteractionHand.MAIN_HAND).getSweepHitBox(this, p_36347_))) {
 +                        // Use entity reach instead of constant 9.0. Vanilla uses bottom center-to-center checks here, so don't update this to use canReach, since it uses closest-corner checks.
++                        // magic number so required Mixins can still target here
++                        var reachOld = 9.0;
 +                        var reach = this.getAttributeValue(net.minecraftforge.common.ForgeMod.ENTITY_REACH.get());
 +                        if (livingentity != this && livingentity != p_36347_ && !this.isAlliedTo(livingentity) && (!(livingentity instanceof ArmorStand) || !((ArmorStand)livingentity).isMarker()) && this.distanceToSqr(livingentity) < reach * reach) {
 +                           // CraftBukkit start - Only apply knockback if the damage hits

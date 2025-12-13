@@ -50,21 +50,24 @@ public interface CraftRecipe extends Recipe {
             return new CraftModdedRecipeChoice(list);
         //Ketting end
 
-        if (list.itemStacks.length == 0) {
+        //Ketting start - nullable
+        var items = list.getItems();
+        if (items.length == 0) {
             return null;
         }
 
         if (list.exact) {
-            List<org.bukkit.inventory.ItemStack> choices = new ArrayList<>(list.itemStacks.length);
-            for (net.minecraft.world.item.ItemStack i : list.itemStacks) {
+            List<org.bukkit.inventory.ItemStack> choices = new ArrayList<>(items.length);
+            for (net.minecraft.world.item.ItemStack i : items) {
                 choices.add(CraftItemStack.asBukkitCopy(i));
             }
 
             return new RecipeChoice.ExactChoice(choices);
         } else {
 
-            List<org.bukkit.Material> choices = new ArrayList<>(list.itemStacks.length);
-            for (net.minecraft.world.item.ItemStack i : list.itemStacks) {
+            List<org.bukkit.Material> choices = new ArrayList<>(items.length);
+            for (net.minecraft.world.item.ItemStack i : items) {
+                //Ketting end
                 choices.add(CraftMagicNumbers.getMaterial(i.getItem()));
             }
 

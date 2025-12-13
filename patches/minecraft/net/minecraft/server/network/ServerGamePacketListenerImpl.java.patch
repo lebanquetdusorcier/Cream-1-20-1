@@ -778,12 +778,14 @@
        this.player.connection.ackBlockChangesUpTo(p_9930_.getSequence());
        ServerLevel serverlevel = this.player.serverLevel();
        InteractionHand interactionhand = p_9930_.getHand();
-@@ -1035,7 +_,7 @@
+@@ -1035,7 +_,9 @@
           Vec3 vec3 = blockhitresult.getLocation();
           BlockPos blockpos = blockhitresult.getBlockPos();
           Vec3 vec31 = Vec3.atCenterOf(blockpos);
 -         if (!(this.player.getEyePosition().distanceToSqr(vec31) > MAX_INTERACTION_DISTANCE)) {
-+         if (this.player.canReachRaw(blockpos, 1.5)) { // Vanilla uses eye-to-center distance < ServerGamePacketListenerImpl which is 6*6, default block reach is 4.5, so add 1.5 padding
++         boolean canReachUnmodded = this.testPlayerCanReach(blockpos);
++         boolean canReachModded = this.player.canReach(blockpos, 1.5); // Vanilla uses eye-to-center distance < ServerGamePacketListenerImpl which is 6*6, default block reach is 4.5, so add 1.5 padding
++         if (canReachUnmodded == canReachModded ? this.player.canReachRaw(blockpos, 1.5) : canReachModded) {
              Vec3 vec32 = vec3.subtract(vec31);
              double d0 = 1.0000001D;
              if (Math.abs(vec32.x()) < 1.0000001D && Math.abs(vec32.y()) < 1.0000001D && Math.abs(vec32.z()) < 1.0000001D) {
@@ -797,8 +799,14 @@
                       InteractionResult interactionresult = this.player.gameMode.useItemOn(this.player, serverlevel, itemstack, interactionhand, blockhitresult);
                       if (direction == Direction.UP && !interactionresult.consumesAction() && blockpos.getY() >= i - 1 && wasBlockPlacementAttempt(this.player, itemstack)) {
                          Component component = Component.translatable("build.tooHigh", i - 1).withStyle(ChatFormatting.RED);
-@@ -1068,12 +_,57 @@
+@@ -1066,14 +_,63 @@
+       }
+    }
  
++   private boolean testPlayerCanReach(BlockPos pos) {
++      return this.player.canReach(pos, 1.5);
++   }
++
     public void handleUseItem(ServerboundUseItemPacket p_9932_) {
        PacketUtils.ensureRunningOnSameThread(p_9932_, this, this.player.serverLevel());
 +      if (this.player.isImmobile()) return; // CraftBukkit
