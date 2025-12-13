@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/inventory/TransientCraftingContainer.java
 +++ b/net/minecraft/world/inventory/TransientCraftingContainer.java
-@@ -13,6 +_,74 @@
+@@ -13,6 +_,79 @@
     private final int height;
     private final AbstractContainerMenu menu;
  
@@ -24,7 +24,12 @@
 +   }
 +
 +   public void onClose(org.bukkit.craftbukkit.v1_20_R1.entity.CraftHumanEntity who) {
-+      transaction.remove(who);
++      int index = transaction.indexOf(who);
++      if (index < 0 || index > transaction.size()) {
++         org.kettingpowered.ketting.core.Ketting.LOGGER.warn("Trying to remove an out-of-bounds index on container close. Skipping.");
++         return;
++      }
++      transaction.remove(index);
 +   }
 +
 +   public List<org.bukkit.entity.HumanEntity> getViewers() {
